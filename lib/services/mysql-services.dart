@@ -39,15 +39,23 @@ class MySQLServices {
     }
   }
 
-  static Future select(var conn) async {
-    String query = "Select * from candidates";
+  static Future selectAll(var conn) async {
+    String query = "Select * from candidates order by id";
     var result;
     try {
       result = await conn.query(query);
     } catch (e) {
       throw Exception('Cannot insert record: ${e}');
     }
-
     return result;
+  }
+
+  static Future<void> deleteByKey(var conn, int id) async {
+    String query = "DELETE FROM candidates where id='$id'";
+    try {
+      await conn.query(query);
+    } catch (e) {
+      throw Exception('Cannot insert record: ${e}');
+    }
   }
 }

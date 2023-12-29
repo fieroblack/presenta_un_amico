@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:presenta_un_amico/screens/components/custom-text-input.dart';
 import 'package:presenta_un_amico/services/mysql-services.dart';
 import 'package:presenta_un_amico/utilities/constants.dart';
@@ -110,7 +111,7 @@ class FormWidget extends StatelessWidget {
                   }
                   try {
                     var conn = await MySQLServices.connectToMySQL();
-                    await MySQLServices.select(conn);
+                    await MySQLServices.selectAll(conn);
                     await MySQLServices.appendRow(
                       conn,
                       'Stefano Gallo',
@@ -120,8 +121,13 @@ class FormWidget extends StatelessWidget {
                       _tel.text.toString(),
                       _level.text.toString(),
                     );
-
                     await MySQLServices.connectClose(conn);
+                    _name.clear();
+                    _lName.clear();
+                    _email.clear();
+                    _tel.clear();
+                    _level.clear();
+                    SystemChannels.textInput.invokeMethod('TextInput.hide');
                   } catch (e) {
                     //TODO toast
                     print('Exception found: ${e}');

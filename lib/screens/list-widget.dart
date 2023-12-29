@@ -2,10 +2,29 @@ import 'package:flutter/material.dart';
 import 'package:presenta_un_amico/services/mysql-services.dart';
 import 'components/custom-list-tile.dart';
 
-class ListWidgetCandidates extends StatelessWidget {
+class ListWidgetCandidates extends StatefulWidget {
   const ListWidgetCandidates({super.key});
 
   static const bool admin = true;
+
+  @override
+  State<ListWidgetCandidates> createState() => _ListWidgetCandidatesState();
+}
+
+class _ListWidgetCandidatesState extends State<ListWidgetCandidates> {
+  late Future<List<Widget>> _listFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _listFuture = recoverDatas();
+  }
+
+  Future<void> _refreshList() async {
+    setState(() {
+      _listFuture = recoverDatas();
+    });
+  }
 
   Future<List<Widget>> recoverDatas() async {
     List<Widget> list = [];
@@ -14,7 +33,7 @@ class ListWidgetCandidates extends StatelessWidget {
     try {
       var conn = await MySQLServices.connectToMySQL();
       //TODO check admin or not
-      res = await MySQLServices.select(conn);
+      res = await MySQLServices.selectAll(conn);
       await MySQLServices.connectClose(conn);
     } catch (e) {
       throw Exception("Cannot upload the list $e");
@@ -22,6 +41,7 @@ class ListWidgetCandidates extends StatelessWidget {
     for (var i in res) {
       print('${i['ID']}:${i['name']}:${i['lastName']}:${i['date']} ');
       list.add(CustomListTile(
+          func: _refreshList,
           id: i['ID'],
           name: i['name'],
           lastName: i['lastName'],
@@ -34,7 +54,7 @@ class ListWidgetCandidates extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: recoverDatas(),
+        future: _listFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
