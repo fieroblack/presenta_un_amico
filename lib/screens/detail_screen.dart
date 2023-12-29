@@ -3,13 +3,16 @@ import 'package:presenta_un_amico/services/mysql-services.dart';
 
 class DetailScreen extends StatelessWidget {
   const DetailScreen(
-      {super.key, required this.id, required this.name, required this.lName});
+      {super.key, required int id, required String name, required String lName})
+      : _lName = lName,
+        _name = name,
+        _id = id;
 
-  final int id;
-  final String name;
-  final String lName;
+  final int _id;
+  final String _name;
+  final String _lName;
 
-  Future<void> deleteRecord(int id) async {
+  Future<void> _deleteRecord(int id) async {
     var conn = await MySQLServices.connectToMySQL();
     await MySQLServices.deleteByKey(conn, id);
     await MySQLServices.connectClose(conn);
@@ -22,12 +25,12 @@ class DetailScreen extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Center(
-            child: Text('id: ${id.toString()} nome: $name cognome: $lName '),
+            child: Text('id: ${_id.toString()} nome: $_name cognome: $_lName '),
           ),
           TextButton(
               onPressed: () {
                 try {
-                  deleteRecord(id);
+                  _deleteRecord(_id);
                   Navigator.pop(context);
                 } catch (e) {
                   throw Exception('Cannot delete record');

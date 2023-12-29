@@ -4,12 +4,13 @@ import 'package:presenta_un_amico/utilities/constants.dart';
 class CustomEmPwInput extends StatefulWidget {
   const CustomEmPwInput({
     super.key,
-    required this.hintText,
-    required this.pwd,
-  });
+    required String hintText,
+    required bool pwd,
+  })  : _pwd = pwd,
+        _hintText = hintText;
 
-  final String hintText;
-  final bool pwd;
+  final String _hintText;
+  final bool _pwd;
 
   @override
   State<CustomEmPwInput> createState() => _CustomEmPwInputState();
@@ -21,15 +22,15 @@ class _CustomEmPwInputState extends State<CustomEmPwInput> {
 
   @override
   void initState() {
-    if (widget.pwd) {
+    if (widget._pwd) {
       _isVisible = true;
       _suffixIcon = Icons.visibility_off;
     }
     super.initState();
   }
 
-  void setVisibility() {
-    if (!widget.pwd) {
+  void _setVisibility() {
+    if (!widget._pwd) {
       return;
     }
     setState(() {
@@ -47,17 +48,17 @@ class _CustomEmPwInputState extends State<CustomEmPwInput> {
       child: TextField(
         style: kUserPwdTextStyle,
         obscureText: _isVisible,
-        keyboardType: widget.pwd
+        keyboardType: widget._pwd
             ? TextInputType.visiblePassword
             : TextInputType.emailAddress,
         decoration: InputDecoration(
           suffixIcon: IconButton(
             icon: Icon(_suffixIcon),
             onPressed: () {
-              setVisibility();
+              _setVisibility();
             },
           ),
-          labelText: widget.hintText,
+          labelText: widget._hintText,
           hintStyle: kHintTextStyle,
           contentPadding: const EdgeInsets.all(20.0),
           border: const OutlineInputBorder(

@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 class ButtonFileScanner extends StatelessWidget {
   const ButtonFileScanner({
     super.key,
-    required this.controller,
-  });
-  final TextEditingController controller;
+    required TextEditingController controller,
+  }) : _controller = controller;
+  final TextEditingController _controller;
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +15,7 @@ class ButtonFileScanner extends StatelessWidget {
         //TODO write a function to select file
         FilePickerResult? res = await FilePicker.platform.pickFiles();
         if (res != null) {
-          controller.text = res.files.first.name.toString();
+          _controller.text = res.files.first.name.toString();
         } else {
           //TODO do something
         }

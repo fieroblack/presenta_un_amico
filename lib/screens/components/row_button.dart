@@ -3,14 +3,16 @@ import 'package:flutter/material.dart';
 class RowButton extends StatelessWidget {
   const RowButton({
     super.key,
-    required this.func,
-    required this.label,
-    required this.textForButton,
-  });
+    required dynamic Function() func,
+    required String label,
+    required String textForButton,
+  })  : _textForButton = textForButton,
+        _label = label,
+        _func = func;
 
-  final Function() func;
-  final String label;
-  final String textForButton;
+  final Function() _func;
+  final String _label;
+  final String _textForButton;
 
   @override
   Widget build(BuildContext context) {
@@ -18,13 +20,13 @@ class RowButton extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
-          label,
+          _label,
           style: const TextStyle(color: Colors.black),
         ),
         TextButton(
-          onPressed: func,
+          onPressed: _func,
           child: Text(
-            textForButton,
+            _textForButton,
             style: const TextStyle(
                 color: Colors.black, fontWeight: FontWeight.bold),
           ),

@@ -5,18 +5,22 @@ import '../../utilities/constants.dart';
 class CustomListTile extends StatelessWidget {
   const CustomListTile({
     super.key,
-    required this.id,
-    required this.name,
-    required this.lastName,
-    required this.date,
-    required this.func,
-  });
+    required int id,
+    required String name,
+    required String lastName,
+    required DateTime date,
+    required dynamic Function() func,
+  })  : _func = func,
+        _date = date,
+        _lastName = lastName,
+        _name = name,
+        _id = id;
 
-  final int id;
-  final String name;
-  final String lastName;
-  final DateTime date;
-  final Function() func;
+  final int _id;
+  final String _name;
+  final String _lastName;
+  final DateTime _date;
+  final Function() _func;
 
   //TODO Controllo admin
   static const bool admin = true;
@@ -30,8 +34,8 @@ class CustomListTile extends StatelessWidget {
             context,
             MaterialPageRoute(
                 builder: (context) =>
-                    DetailScreen(id: id, name: name, lName: lastName)));
-        func();
+                    DetailScreen(id: _id, name: _name, lName: _lastName)));
+        _func();
       },
       child: Container(
         margin: const EdgeInsets.symmetric(vertical: 5.0),
@@ -47,11 +51,11 @@ class CustomListTile extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  '${id.toString()} $name $lastName',
+                  '${_id.toString()} $_name $_lastName',
                   style: kLabelStyle,
                 ),
                 Text(
-                  'Data inserimento: ${date.day}/${date.month}/${date.year}',
+                  'Data inserimento: ${_date.day}/${_date.month}/${_date.year}',
                 ),
                 if (admin) const Text('Inserito da: Stefano Gallo'),
               ],

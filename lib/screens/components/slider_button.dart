@@ -5,10 +5,10 @@ import '../../utilities/constants.dart';
 class SliderSubmit extends StatelessWidget {
   const SliderSubmit({
     super.key,
-    required this.label,
-  });
+    required String label,
+  }) : _label = label;
 
-  final String label;
+  final String _label;
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +17,7 @@ class SliderSubmit extends StatelessWidget {
       backgroundColor: Colors.grey[300],
       rolling: true,
       toggleColor: LogoColor.greenLogoColor,
-      child: Text(label),
+      child: Text(_label),
       action: (controller) async {
         controller.loading();
         await Future.delayed(const Duration(seconds: 1));

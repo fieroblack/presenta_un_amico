@@ -5,26 +5,29 @@ import '../../utilities/constants.dart';
 class CustomTextInput extends StatelessWidget {
   const CustomTextInput(
       {super.key,
-      required this.label,
-      required this.readOnly,
-      required this.controller});
+      required String label,
+      required bool readOnly,
+      required TextEditingController controller})
+      : _controller = controller,
+        _readOnly = readOnly,
+        _label = label;
 
-  final String label;
-  final bool readOnly;
-  final TextEditingController controller;
+  final String _label;
+  final bool _readOnly;
+  final TextEditingController _controller;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 0.0, vertical: 10.0),
       child: TextField(
-        controller: controller,
-        enabled: !readOnly,
-        readOnly: readOnly,
+        controller: _controller,
+        enabled: !_readOnly,
+        readOnly: _readOnly,
         style: kUserPwdTextStyle,
         decoration: InputDecoration(
           label: Text(
-            label,
+            _label,
             style: kLabelStyle,
           ),
           hintStyle: kHintTextStyle,

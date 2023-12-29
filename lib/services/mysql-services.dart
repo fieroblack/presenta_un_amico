@@ -14,7 +14,6 @@ class MySQLServices {
       var conn = await MySqlConnection.connect(settings);
       return conn;
     } catch (e) {
-      //TODO print toast connection erorr
       throw Exception('Connection error $e');
     }
   }

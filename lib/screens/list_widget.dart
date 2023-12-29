@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:presenta_un_amico/screens/components/template_with_logo.dart';
 import 'package:presenta_un_amico/services/mysql-services.dart';
+import 'package:presenta_un_amico/utilities/constants.dart';
 import 'components/custom_list_tile.dart';
 
 class ListWidgetCandidates extends StatefulWidget {
@@ -17,16 +19,16 @@ class _ListWidgetCandidatesState extends State<ListWidgetCandidates> {
   @override
   void initState() {
     super.initState();
-    _listFuture = recoverDatas();
+    _listFuture = _recoverDatas();
   }
 
   Future<void> _refreshList() async {
     setState(() {
-      _listFuture = recoverDatas();
+      _listFuture = _recoverDatas();
     });
   }
 
-  Future<List<Widget>> recoverDatas() async {
+  Future<List<Widget>> _recoverDatas() async {
     List<Widget> list = [];
     dynamic res;
     try {
@@ -57,31 +59,35 @@ class _ListWidgetCandidatesState extends State<ListWidgetCandidates> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           } else if (snapshot.data!.isEmpty) {
-            //TODO gestire pagina di no data
-            return const Center(
-              child: Text('No data'),
+            return const LogoTemplate(
+              listWidget: [
+                Expanded(
+                  child: Center(
+                    child: Text(
+                      'Elenco vuoto',
+                    ),
+                  ),
+                )
+              ],
             );
           } else if (snapshot.hasError) {
-            //TODO gestire errore
-            return Center(child: Text('Error: ${snapshot.error}'));
+            return LogoTemplate(
+              listWidget: [
+                Center(
+                  child: Text('Errore: ${snapshot.error}'),
+                ),
+              ],
+            );
           } else {
             List<Widget> data = snapshot.data as List<Widget>;
-            return Padding(
-              padding:
-                  const EdgeInsets.symmetric(vertical: 20.0, horizontal: 25.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Image.asset(
-                    'assets/images/iagica_logo.png',
-                    scale: 12,
-                  ),
-                  Expanded(
-                      child: ListView(
+            return LogoTemplate(
+              listWidget: [
+                Expanded(
+                  child: ListView(
                     children: data,
-                  ))
-                ],
-              ),
+                  ),
+                ),
+              ],
             );
           }
         });

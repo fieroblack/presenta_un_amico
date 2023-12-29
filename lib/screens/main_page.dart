@@ -12,20 +12,20 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   int _selectedIndex = 0;
-  Widget bodyWidget = FormWidget();
+  Widget _bodyWidget = FormWidget();
 
   void _changePage(int index) {
     setState(() {
       _selectedIndex = index;
       switch (index) {
         case 0:
-          bodyWidget = FormWidget();
+          _bodyWidget = FormWidget();
           break;
         case 1:
-          bodyWidget = const ListWidgetCandidates();
+          _bodyWidget = const ListWidgetCandidates();
           break;
         default:
-          bodyWidget = FormWidget();
+          _bodyWidget = FormWidget();
           break;
       }
     });
@@ -35,7 +35,7 @@ class _MainPageState extends State<MainPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: bodyWidget,
+        child: _bodyWidget,
       ),
       bottomNavigationBar: BottomNavigationBar(
         onTap: (index) {
