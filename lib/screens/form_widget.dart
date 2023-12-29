@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:presenta_un_amico/screens/components/custom-text-input.dart';
+import 'package:presenta_un_amico/screens/components/custom_text_input.dart';
 import 'package:presenta_un_amico/services/mysql-services.dart';
 import 'package:presenta_un_amico/utilities/constants.dart';
-import 'components/button-file-scanner.dart';
+import 'components/button_file_scanner.dart';
 
 class FormWidget extends StatelessWidget {
   FormWidget({super.key});
@@ -103,8 +103,6 @@ class FormWidget extends StatelessWidget {
                       _email.text.isEmpty |
                       _tel.text.isEmpty |
                       _level.text.isEmpty) {
-                    print(
-                        'Probabilmente non tutti i campi sono inseriti correttamente');
                     //TODO implementare un toast di controllo
                     //TODO inserire anche verifica su file
                     return;
@@ -130,7 +128,6 @@ class FormWidget extends StatelessWidget {
                     SystemChannels.textInput.invokeMethod('TextInput.hide');
                   } catch (e) {
                     //TODO toast
-                    print('Exception found: ${e}');
                   }
                 },
                 child: const Text(

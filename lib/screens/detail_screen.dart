@@ -9,6 +9,12 @@ class DetailScreen extends StatelessWidget {
   final String name;
   final String lName;
 
+  Future<void> deleteRecord(int id) async {
+    var conn = await MySQLServices.connectToMySQL();
+    await MySQLServices.deleteByKey(conn, id);
+    await MySQLServices.connectClose(conn);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,17 +25,15 @@ class DetailScreen extends StatelessWidget {
             child: Text('id: ${id.toString()} nome: $name cognome: $lName '),
           ),
           TextButton(
-              onPressed: () async {
+              onPressed: () {
                 try {
-                  var conn = await MySQLServices.connectToMySQL();
-                  await MySQLServices.deleteByKey(conn, id);
-                  await MySQLServices.connectClose(conn);
+                  deleteRecord(id);
                   Navigator.pop(context);
                 } catch (e) {
                   throw Exception('Cannot delete record');
                 }
               },
-              child: Text('delete'))
+              child: const Text('delete'))
         ],
       ),
     );

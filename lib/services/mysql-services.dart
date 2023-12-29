@@ -15,7 +15,7 @@ class MySQLServices {
       return conn;
     } catch (e) {
       //TODO print toast connection erorr
-      throw Exception('Connection error ${e}');
+      throw Exception('Connection error $e');
     }
   }
 
@@ -23,7 +23,7 @@ class MySQLServices {
     try {
       await conn.close();
     } catch (e) {
-      throw Exception('Cannot close connection: ${e}');
+      throw Exception('Cannot close connection: $e');
     }
   }
 
@@ -35,17 +35,17 @@ class MySQLServices {
     try {
       await conn.query(query);
     } catch (e) {
-      throw Exception('Cannot insert record: ${e}');
+      throw Exception('Cannot insert record: $e');
     }
   }
 
   static Future selectAll(var conn) async {
     String query = "Select * from candidates order by id";
-    var result;
+    dynamic result;
     try {
       result = await conn.query(query);
     } catch (e) {
-      throw Exception('Cannot insert record: ${e}');
+      throw Exception('Cannot insert record: $e');
     }
     return result;
   }
@@ -55,7 +55,7 @@ class MySQLServices {
     try {
       await conn.query(query);
     } catch (e) {
-      throw Exception('Cannot insert record: ${e}');
+      throw Exception('Cannot insert record: $e');
     }
   }
 }

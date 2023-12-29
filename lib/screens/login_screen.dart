@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:presenta_un_amico/screens/components/slider-button.dart';
-import 'components/custom-email-pwd-input.dart';
-import 'components/row-button.dart';
+import 'components/custom_email_pwd_input.dart';
+import 'components/row_button.dart';
+import 'components/slider_button.dart';
 
-class RegisterScreen extends StatelessWidget {
-  const RegisterScreen({super.key});
+class LoginScreen extends StatelessWidget {
+  const LoginScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -33,21 +33,18 @@ class RegisterScreen extends StatelessWidget {
                     hintText: 'Password',
                     pwd: true,
                   ),
-                  const CustomEmPwInput(
-                    hintText: 'Confirm password',
-                    pwd: true,
+                  const SliderSubmit(
+                    label: 'Scorri per accedere',
                   ),
-                  const SliderSubmit(label: 'Scorri per registrarti'),
                   const SizedBox(
                     height: 30.0,
                   ),
                   RowButton(
-                    label: 'Sei già registrato?',
-                    textForButton: 'Effettua il login!',
-                    func: () {
-                      Navigator.pop(context);
-                    },
-                  )
+                      label: 'Non sei ancora registrato?',
+                      textForButton: 'Fallo subito!',
+                      func: () {
+                        //TODO capire se la registrazione va lasciata in gestione agli admin
+                      })
                 ],
               ),
             )

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:presenta_un_amico/screens/main-page.dart';
+import 'package:presenta_un_amico/screens/main_page.dart';
 import 'package:presenta_un_amico/utilities/constants.dart';
 
 void main() {

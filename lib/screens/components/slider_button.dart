@@ -13,7 +13,7 @@ class SliderSubmit extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ActionSlider.standard(
-      boxShadow: [],
+      boxShadow: const [],
       backgroundColor: Colors.grey[300],
       rolling: true,
       toggleColor: LogoColor.greenLogoColor,

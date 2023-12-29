@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:presenta_un_amico/services/mysql-services.dart';
-import 'components/custom-list-tile.dart';
+import 'components/custom_list_tile.dart';
 
 class ListWidgetCandidates extends StatefulWidget {
   const ListWidgetCandidates({super.key});
@@ -28,8 +28,7 @@ class _ListWidgetCandidatesState extends State<ListWidgetCandidates> {
 
   Future<List<Widget>> recoverDatas() async {
     List<Widget> list = [];
-    var res;
-    print('Inizio function');
+    dynamic res;
     try {
       var conn = await MySQLServices.connectToMySQL();
       //TODO check admin or not
@@ -39,7 +38,6 @@ class _ListWidgetCandidatesState extends State<ListWidgetCandidates> {
       throw Exception("Cannot upload the list $e");
     }
     for (var i in res) {
-      print('${i['ID']}:${i['name']}:${i['lastName']}:${i['date']} ');
       list.add(CustomListTile(
           func: _refreshList,
           id: i['ID'],
@@ -57,8 +55,14 @@ class _ListWidgetCandidatesState extends State<ListWidgetCandidates> {
         future: _listFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.data!.isEmpty) {
+            //TODO gestire pagina di no data
+            return const Center(
+              child: Text('No data'),
+            );
           } else if (snapshot.hasError) {
+            //TODO gestire errore
             return Center(child: Text('Error: ${snapshot.error}'));
           } else {
             List<Widget> data = snapshot.data as List<Widget>;

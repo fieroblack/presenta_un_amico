@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:presenta_un_amico/screens/detail-screen.dart';
+import 'package:presenta_un_amico/screens/detail_screen.dart';
 import '../../utilities/constants.dart';
 
 class CustomListTile extends StatelessWidget {
@@ -53,7 +53,7 @@ class CustomListTile extends StatelessWidget {
                 Text(
                   'Data inserimento: ${date.day}/${date.month}/${date.year}',
                 ),
-                if (admin) Text('Inserito da: Stefano Gallo'),
+                if (admin) const Text('Inserito da: Stefano Gallo'),
               ],
             ),
             Icon(

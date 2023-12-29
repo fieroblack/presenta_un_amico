@@ -1,5 +1,3 @@
-import 'dart:typed_data';
-
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 
@@ -19,7 +17,7 @@ class ButtonFileScanner extends StatelessWidget {
         if (res != null) {
           controller.text = res.files.first.name.toString();
         } else {
-          print('cancelled');
+          //TODO do something
         }
       },
       icon: const Icon(

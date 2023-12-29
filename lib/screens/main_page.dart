@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:presenta_un_amico/screens/form-widget.dart';
-import 'package:presenta_un_amico/screens/list-widget.dart';
+import 'package:presenta_un_amico/screens/form_widget.dart';
+import 'package:presenta_un_amico/screens/list_widget.dart';
 import 'package:presenta_un_amico/utilities/constants.dart';
 
 class MainPage extends StatefulWidget {

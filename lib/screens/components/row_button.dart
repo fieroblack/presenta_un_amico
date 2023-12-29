@@ -25,7 +25,8 @@ class RowButton extends StatelessWidget {
           onPressed: func,
           child: Text(
             textForButton,
-            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+            style: const TextStyle(
+                color: Colors.black, fontWeight: FontWeight.bold),
           ),
         ),
       ],
