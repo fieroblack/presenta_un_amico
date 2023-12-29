@@ -53,13 +53,20 @@ class _ListWidgetCandidatesState extends State<ListWidgetCandidates> {
 
   @override
   Widget build(BuildContext context) {
+    //TODO testare in mancanza di connessione
     return FutureBuilder(
         future: _listFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const LogoTemplate(
+            return LogoTemplate(
               listWidget: [
-                Expanded(child: Center(child: CircularProgressIndicator())),
+                Expanded(
+                  child: Center(
+                    child: CircularProgressIndicator(
+                      color: LogoColor.greenLogoColor,
+                    ),
+                  ),
+                ),
               ],
             );
           } else if (snapshot.data!.isEmpty) {

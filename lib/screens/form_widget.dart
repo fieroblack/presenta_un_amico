@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:presenta_un_amico/screens/components/custom_text_input.dart';
 import 'package:presenta_un_amico/screens/components/template_with_logo.dart';
+import 'package:presenta_un_amico/services/flutter_general_services.dart';
 import 'package:presenta_un_amico/services/mysql-services.dart';
 import 'package:presenta_un_amico/utilities/constants.dart';
 import 'components/button_file_scanner.dart';
@@ -94,11 +95,20 @@ class FormWidget extends StatelessWidget {
                     _email.text.isEmpty |
                     _tel.text.isEmpty |
                     _level.text.isEmpty) {
-                  //TODO implementare un toast di controllo
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    duration: const Duration(seconds: 1),
+                    content: const Text(
+                      'Verificare che tutti i campi siano compilati',
+                      textAlign: TextAlign.center,
+                      style: kSnackStyle,
+                    ),
+                    backgroundColor: Colors.grey[300],
+                  ));
                   //TODO inserire anche verifica su file
                   return;
                 }
                 try {
+                  FlutterGeneralServices.buildShowDialog(context);
                   var conn = await MySQLServices.connectToMySQL();
                   await MySQLServices.selectAll(conn);
                   await MySQLServices.appendRow(
@@ -117,8 +127,15 @@ class FormWidget extends StatelessWidget {
                   _tel.clear();
                   _level.clear();
                   SystemChannels.textInput.invokeMethod('TextInput.hide');
+                  if (context.mounted) {
+                    Navigator.pop(context);
+                  }
                 } catch (e) {
-                  //TODO toast
+                  if (context.mounted) {
+                    Navigator.pop(context);
+                    FlutterGeneralServices.showSnackBar(
+                        context, 'Errore in fase di caricamento');
+                  }
                 }
               },
               child: const Text(

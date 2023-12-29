@@ -32,5 +32,13 @@ const TextStyle kTitleStyle = TextStyle(
   color: Colors.black,
 );
 
-const TextStyle kButtonStyle =
-    TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 25.0);
+const TextStyle kButtonStyle = TextStyle(
+  color: Colors.white,
+  fontWeight: FontWeight.bold,
+  fontSize: 25.0,
+);
+
+const TextStyle kSnackStyle = TextStyle(
+  color: Colors.black,
+  fontSize: 15.0,
+);
