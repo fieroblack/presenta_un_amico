@@ -57,7 +57,11 @@ class _ListWidgetCandidatesState extends State<ListWidgetCandidates> {
         future: _listFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
+            return const LogoTemplate(
+              listWidget: [
+                Expanded(child: Center(child: CircularProgressIndicator())),
+              ],
+            );
           } else if (snapshot.data!.isEmpty) {
             return const LogoTemplate(
               listWidget: [
