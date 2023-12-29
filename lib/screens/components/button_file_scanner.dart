@@ -1,5 +1,6 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:presenta_un_amico/services/flutter_general_services.dart';
 
 class ButtonFileScanner extends StatelessWidget {
   const ButtonFileScanner({
@@ -17,7 +18,9 @@ class ButtonFileScanner extends StatelessWidget {
         if (res != null) {
           _controller.text = res.files.first.name.toString();
         } else {
-          //TODO do something
+          if (context.mounted) {
+            FlutterGeneralServices.showSnackBar(context, 'No file selected');
+          }
         }
       },
       icon: const Icon(
