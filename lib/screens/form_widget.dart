@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:presenta_un_amico/screens/components/custom_text_input.dart';
@@ -6,20 +9,15 @@ import 'package:presenta_un_amico/services/flutter_general_services.dart';
 import 'package:presenta_un_amico/services/mysql-services.dart';
 import 'package:presenta_un_amico/utilities/constants.dart';
 import 'components/button_file_scanner.dart';
+import 'package:path_provider/path_provider.dart';
 
 class FormWidget extends StatelessWidget {
   FormWidget({super.key});
 
-  // final TextEditingController _name = TextEditingController();
-  // final TextEditingController _lName = TextEditingController();
-  // final TextEditingController _email = TextEditingController();
-  // final TextEditingController _tel = TextEditingController();
-  // final TextEditingController _level = TextEditingController();
-  // final TextEditingController _fileName = TextEditingController();
-
   //0: Name, 1: LastName, 2: Email, 3: Telefono, 4: Level, 5: File
   final List<TextEditingController> _fieldList =
       List.generate(6, (index) => TextEditingController());
+  List<int> bytes = [];
 
   @override
   Widget build(BuildContext context) {
@@ -78,8 +76,9 @@ class FormWidget extends StatelessWidget {
             children: [
               Flexible(
                 child: CustomTextInput(
+                  //TODO print just a file name
                   controller: _fieldList[5],
-                  label: 'Seleziona il file da allegare',
+                  label: 'File da allegare',
                   readOnly: true,
                 ),
               ),
@@ -94,6 +93,21 @@ class FormWidget extends StatelessWidget {
                 backgroundColor: LogoColor.greenLogoColor,
               ),
               onPressed: () async {
+                String base64EncodedData = '';
+                try {
+                  File file = File(_fieldList[5].text);
+
+                  List<int> fileBytes = await file.readAsBytes();
+                  base64EncodedData = base64.encode(fileBytes);
+                  // ByteData data =
+                  //     ByteData.sublistView(Uint8List.fromList(fileBytes));
+                  // uint8List = data.buffer.asUint8List();
+                  print('updated: ${base64EncodedData}');
+                } catch (e) {
+                  //TODO exception handle
+                  print(e);
+                }
+
                 for (TextEditingController i in _fieldList) {
                   if (i.text.isEmpty) {
                     ScaffoldMessenger.of(context).showSnackBar(
@@ -124,7 +138,7 @@ class FormWidget extends StatelessWidget {
                       _fieldList[2].text,
                       _fieldList[3].text,
                       _fieldList[4].text,
-                      _fieldList[5].text);
+                      base64EncodedData);
                   await MySQLServices.connectClose(conn);
 
                   for (TextEditingController i in _fieldList) {

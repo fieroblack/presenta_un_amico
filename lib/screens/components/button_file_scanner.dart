@@ -3,10 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:presenta_un_amico/services/flutter_general_services.dart';
 
 class ButtonFileScanner extends StatelessWidget {
-  const ButtonFileScanner({
+  ButtonFileScanner({
     super.key,
     required TextEditingController controller,
   }) : _controller = controller;
+
   final TextEditingController _controller;
 
   @override
@@ -14,9 +15,11 @@ class ButtonFileScanner extends StatelessWidget {
     return IconButton(
       onPressed: () async {
         //TODO write a function to select file
-        FilePickerResult? res = await FilePicker.platform.pickFiles();
+        FilePickerResult? res =
+            await FilePicker.platform.pickFiles(withData: true);
         if (res != null) {
-          _controller.text = res.files.first.name.toString();
+          _controller.text = res.files.first.path.toString();
+          print('selected: ${res.files.first.bytes}');
         } else {
           if (context.mounted) {
             FlutterGeneralServices.showSnackBar(context, 'No file selected');

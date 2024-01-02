@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:presenta_un_amico/screens/main_page.dart';
+import 'package:presenta_un_amico/services/mysql-services.dart';
 import 'package:presenta_un_amico/utilities/constants.dart';
 
-void main() {
+void main() async {
   runApp(const MyApp());
 }
 

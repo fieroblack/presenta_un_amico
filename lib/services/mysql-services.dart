@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
 import 'package:mysql1/mysql1.dart';
 
 class MySQLServices {
@@ -63,6 +66,23 @@ class MySQLServices {
     } catch (e) {
       throw Exception('Cannot insert record: $e');
     }
+  }
+
+  static Future<dynamic> readPdfFile(var conn, int id) async {
+    // String query = "select file from candidates where id='$id'";
+    // dynamic exec = '';
+    // try {
+    //   exec = await conn.query(query);
+    // } catch (e) {
+    //   throw Exception('Cannot read record: $e');
+    // }
+    // return exec.first['file'];
+    String query = "select file from candidates where id='$id'";
+    var results = await conn.query(query);
+    var base64EncodedData = results.first['file'].toString();
+    List<int> byteList = base64.decode(base64EncodedData);
+    print('byteList: $byteList');
+    return byteList;
   }
 
   //TODO delete this method
