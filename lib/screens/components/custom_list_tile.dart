@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:presenta_un_amico/screens/detail_page.dart';
 import 'package:presenta_un_amico/services/flutter_general_services.dart';
 import '../../services/mysql-services.dart';
 import '../../utilities/constants.dart';
@@ -36,10 +37,22 @@ class CustomListTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       borderRadius: BorderRadius.circular(15.0),
+      onTap: () {
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return DetailPage(
+                date: _date,
+                id: _id,
+                name: _name,
+                lastName: _lastName,
+              );
+            });
+      },
       onLongPress: () {
         FlutterGeneralServices.showMaterialBanner(
           context,
-          "Sei sicuro di voler eliminare l'elemento selezionato?",
+          "Sei sicuro di voler eliminare l'elemento selezionato?\n[$_name, $_lastName]",
           () async {
             try {
               await _deleteRecord(_id);

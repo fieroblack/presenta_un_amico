@@ -32,7 +32,6 @@ class FlutterGeneralServices {
       MaterialBanner(
         content: Text(
           text,
-          textAlign: TextAlign.center,
           style: kSnackStyle,
         ),
         actions: [
