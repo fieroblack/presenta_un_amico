@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:presenta_un_amico/screens/detail_screen.dart';
+import 'package:presenta_un_amico/services/flutter_general_services.dart';
+import '../../services/mysql-services.dart';
 import '../../utilities/constants.dart';
 
 class CustomListTile extends StatelessWidget {
@@ -25,17 +26,30 @@ class CustomListTile extends StatelessWidget {
   //TODO Controllo admin
   static const bool admin = true;
 
+  Future<void> _deleteRecord(int id) async {
+    var conn = await MySQLServices.connectToMySQL();
+    await MySQLServices.deleteByKey(conn, id);
+    await MySQLServices.connectClose(conn);
+  }
+
   @override
   Widget build(BuildContext context) {
     return InkWell(
       borderRadius: BorderRadius.circular(15.0),
-      onTap: () async {
-        await Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) =>
-                    DetailScreen(id: _id, name: _name, lName: _lastName)));
-        _func();
+      onLongPress: () {
+        FlutterGeneralServices.showMaterialBanner(
+          context,
+          "Sei sicuro di voler eliminare l'elemento selezionato?",
+          () async {
+            try {
+              await _deleteRecord(_id);
+              _func();
+            } catch (e) {
+              //TODO print exception
+              _func();
+            }
+          },
+        );
       },
       child: Container(
         margin: const EdgeInsets.symmetric(vertical: 5.0),

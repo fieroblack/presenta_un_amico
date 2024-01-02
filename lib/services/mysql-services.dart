@@ -64,4 +64,21 @@ class MySQLServices {
       throw Exception('Cannot insert record: $e');
     }
   }
+
+  //TODO delete this method
+  static Future<void> justForDebug() async {
+    try {
+      for (int i = 0; i < 10; i++) {
+        var conn = await MySQLServices.connectToMySQL();
+        String query =
+            "INSERT INTO candidates (promoter, name, lastName, email, tel, level, file, date) "
+            "VALUES ('promoter$i', 'name$i', 'lastname$i', 'email$i', 'tel$i', 'level$i', 'file$i', '${DateTime.now()}')";
+        await conn.query(query);
+        await MySQLServices.connectClose(conn);
+      }
+    } catch (e) {
+      print(e);
+      throw Exception('Cannot insert record: $e');
+    }
+  }
 }

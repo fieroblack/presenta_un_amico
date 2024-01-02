@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../utilities/constants.dart';
 
 class FlutterGeneralServices {
-  static Future<dynamic> buildShowDialog(BuildContext context) {
+  static Future<dynamic> buildProgressIndicator(BuildContext context) {
     return showDialog(
       context: context,
       barrierDismissible: false,
@@ -25,5 +25,30 @@ class FlutterGeneralServices {
       ),
       backgroundColor: Colors.grey[300],
     ));
+  }
+
+  static showMaterialBanner(BuildContext context, String text, Function func) {
+    ScaffoldMessenger.of(context).showMaterialBanner(
+      MaterialBanner(
+        content: Text(
+          text,
+          textAlign: TextAlign.center,
+          style: kSnackStyle,
+        ),
+        actions: [
+          TextButton(
+              onPressed: () {
+                func();
+                ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
+              },
+              child: Text('Si')),
+          TextButton(
+              onPressed: () {
+                ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
+              },
+              child: Text('No'))
+        ],
+      ),
+    );
   }
 }

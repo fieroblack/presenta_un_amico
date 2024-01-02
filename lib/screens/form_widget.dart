@@ -112,7 +112,7 @@ class FormWidget extends StatelessWidget {
                 }
 
                 try {
-                  FlutterGeneralServices.buildShowDialog(context);
+                  FlutterGeneralServices.buildProgressIndicator(context);
                   var conn = await MySQLServices.connectToMySQL();
                   await MySQLServices.selectAll(conn);
                   await MySQLServices.appendRow(
@@ -143,6 +143,8 @@ class FormWidget extends StatelessWidget {
                         context, 'Errore in fase di caricamento');
                   }
                 }
+                FlutterGeneralServices.showSnackBar(
+                    context, 'Caricamento effettuato');
               },
               child: const Text(
                 'Conferma dati',
