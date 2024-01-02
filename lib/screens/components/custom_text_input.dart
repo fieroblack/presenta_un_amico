@@ -26,11 +26,7 @@ class CustomTextInput extends StatelessWidget {
         readOnly: _readOnly,
         style: kUserPwdTextStyle,
         decoration: InputDecoration(
-          label: Text(
-            _label,
-            style: kLabelStyle,
-          ),
-          hintStyle: kHintTextStyle,
+          labelText: _label,
           contentPadding: const EdgeInsets.all(20.0),
           border: const OutlineInputBorder(
             borderSide: BorderSide(color: Colors.grey, width: 2.0),

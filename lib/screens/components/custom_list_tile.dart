@@ -74,10 +74,10 @@ class CustomListTile extends StatelessWidget {
                 if (admin) const Text('Inserito da: Stefano Gallo'),
               ],
             ),
-            Icon(
-              Icons.arrow_right,
-              size: 70,
-              color: LogoColor.greenLogoColor,
+            const Icon(
+              Icons.file_open,
+              size: 40,
+              color: Colors.grey,
             )
           ],
         ),
