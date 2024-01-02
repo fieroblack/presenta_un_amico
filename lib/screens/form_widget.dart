@@ -10,12 +10,16 @@ import 'components/button_file_scanner.dart';
 class FormWidget extends StatelessWidget {
   FormWidget({super.key});
 
-  final TextEditingController _name = TextEditingController();
-  final TextEditingController _lName = TextEditingController();
-  final TextEditingController _email = TextEditingController();
-  final TextEditingController _tel = TextEditingController();
-  final TextEditingController _level = TextEditingController();
-  final TextEditingController _fileName = TextEditingController();
+  // final TextEditingController _name = TextEditingController();
+  // final TextEditingController _lName = TextEditingController();
+  // final TextEditingController _email = TextEditingController();
+  // final TextEditingController _tel = TextEditingController();
+  // final TextEditingController _level = TextEditingController();
+  // final TextEditingController _fileName = TextEditingController();
+
+  //0: Name, 1: LastName, 2: Email, 3: Telefono, 4: Level, 5: File
+  final List<TextEditingController> _fieldList =
+      List.generate(6, (index) => TextEditingController());
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +42,7 @@ class FormWidget extends StatelessWidget {
             children: [
               Flexible(
                 child: CustomTextInput(
-                  controller: _name,
+                  controller: _fieldList[0],
                   label: 'Nome',
                   readOnly: false,
                 ),
@@ -48,7 +52,7 @@ class FormWidget extends StatelessWidget {
               ),
               Flexible(
                 child: CustomTextInput(
-                  controller: _lName,
+                  controller: _fieldList[1],
                   label: 'Cognome',
                   readOnly: false,
                 ),
@@ -56,17 +60,17 @@ class FormWidget extends StatelessWidget {
             ],
           ),
           CustomTextInput(
-            controller: _email,
+            controller: _fieldList[2],
             label: 'Email',
             readOnly: false,
           ),
           CustomTextInput(
-            controller: _tel,
+            controller: _fieldList[3],
             label: 'Telefono',
             readOnly: false,
           ),
           CustomTextInput(
-            controller: _level,
+            controller: _fieldList[4],
             label: 'Grado di conoscenza',
             readOnly: false,
           ),
@@ -74,13 +78,13 @@ class FormWidget extends StatelessWidget {
             children: [
               Flexible(
                 child: CustomTextInput(
-                  controller: _fileName,
+                  controller: _fieldList[5],
                   label: 'Seleziona il file da allegare',
                   readOnly: true,
                 ),
               ),
               ButtonFileScanner(
-                controller: _fileName,
+                controller: _fieldList[5],
               ),
             ],
           ),
@@ -90,43 +94,45 @@ class FormWidget extends StatelessWidget {
                 backgroundColor: LogoColor.greenLogoColor,
               ),
               onPressed: () async {
-                if (_name.text.isEmpty |
-                    _lName.text.isEmpty |
-                    _email.text.isEmpty |
-                    _tel.text.isEmpty |
-                    _level.text.isEmpty) {
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                    duration: const Duration(seconds: 1),
-                    content: const Text(
-                      'Verificare che tutti i campi siano compilati',
-                      textAlign: TextAlign.center,
-                      style: kSnackStyle,
-                    ),
-                    backgroundColor: Colors.grey[300],
-                  ));
-                  //TODO inserire anche verifica su file
-                  return;
+                for (TextEditingController i in _fieldList) {
+                  if (i.text.isEmpty) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        duration: const Duration(seconds: 1),
+                        content: const Text(
+                          'Verificare che tutti i campi siano compilati',
+                          textAlign: TextAlign.center,
+                          style: kSnackStyle,
+                        ),
+                        backgroundColor: Colors.grey[300],
+                      ),
+                    );
+                    return;
+                  }
                 }
+
                 try {
                   FlutterGeneralServices.buildShowDialog(context);
                   var conn = await MySQLServices.connectToMySQL();
                   await MySQLServices.selectAll(conn);
                   await MySQLServices.appendRow(
-                    conn,
-                    'Stefano Gallo',
-                    _name.text.toString(),
-                    _lName.text.toString(),
-                    _email.text.toString(),
-                    _tel.text.toString(),
-                    _level.text.toString(),
-                  );
+                      conn,
+                      //TODO ----> promoter, who is logged in
+                      'Stefano Gallo',
+                      _fieldList[0].text,
+                      _fieldList[1].text,
+                      _fieldList[2].text,
+                      _fieldList[3].text,
+                      _fieldList[4].text,
+                      _fieldList[5].text);
                   await MySQLServices.connectClose(conn);
-                  _name.clear();
-                  _lName.clear();
-                  _email.clear();
-                  _tel.clear();
-                  _level.clear();
+
+                  for (TextEditingController i in _fieldList) {
+                    i.clear();
+                  }
+
                   SystemChannels.textInput.invokeMethod('TextInput.hide');
+
                   if (context.mounted) {
                     Navigator.pop(context);
                   }

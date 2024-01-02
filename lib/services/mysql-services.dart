@@ -26,11 +26,18 @@ class MySQLServices {
     }
   }
 
-  static Future<void> appendRow(var conn, String promoter, String name,
-      String lastName, String email, String tel, String level) async {
+  static Future<void> appendRow(
+      var conn,
+      String promoter,
+      String name,
+      String lastName,
+      String email,
+      String tel,
+      String level,
+      String file) async {
     String query =
-        "INSERT INTO candidates (promoter, name, lastName, email, tel, level, date) "
-        "VALUES ('$promoter', '$name', '$lastName', '$email', '$tel', '$level', '${DateTime.now()}')";
+        "INSERT INTO candidates (promoter, name, lastName, email, tel, level, file, date) "
+        "VALUES ('$promoter', '$name', '$lastName', '$email', '$tel', '$level', '$file', '${DateTime.now()}')";
     try {
       await conn.query(query);
     } catch (e) {
