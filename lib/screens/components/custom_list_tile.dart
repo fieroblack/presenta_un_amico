@@ -61,8 +61,8 @@ class CustomListTile extends StatelessWidget {
               await _deleteRecord(_id);
               _func();
             } catch (e) {
-              //TODO print exception
               _func();
+              throw Exception('Error: $e');
             }
           },
         );

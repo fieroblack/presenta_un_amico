@@ -3,8 +3,6 @@ import 'package:presenta_un_amico/services/mysql-services.dart';
 import 'package:presenta_un_amico/utilities/constants.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
-import 'components/template_with_logo.dart';
-
 class DetailPage extends StatelessWidget {
   const DetailPage(
       {super.key,
@@ -47,25 +45,18 @@ class DetailPage extends StatelessWidget {
             ),
           );
         } else if (snapshot.data!.isEmpty) {
-          return const Center(
-              child: LogoTemplate(
-            listWidget: [
-              Expanded(
-                child: Center(
-                  child: Text(
-                    'Elenco vuoto',
-                  ),
-                ),
-              )
-            ],
-          ));
-        } else if (snapshot.hasError) {
-          return LogoTemplate(
-            listWidget: [
-              Center(
-                child: Text('Errore: ${snapshot.error}'),
+          return const Expanded(
+            child: Center(
+              child: Text(
+                'Elenco vuoto',
               ),
-            ],
+            ),
+          );
+        } else if (snapshot.hasError) {
+          return Expanded(
+            child: Center(
+              child: Text('Errore: ${snapshot.error}'),
+            ),
           );
         } else {
           List<Widget> data = snapshot.data as List<Widget>;

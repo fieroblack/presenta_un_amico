@@ -69,6 +69,7 @@ class _ListWidgetCandidatesState extends State<ListWidgetCandidates> {
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return LogoTemplate(
+              user: widget._user,
               listWidget: [
                 Expanded(
                   child: Center(
@@ -80,8 +81,9 @@ class _ListWidgetCandidatesState extends State<ListWidgetCandidates> {
               ],
             );
           } else if (snapshot.data!.isEmpty) {
-            return const LogoTemplate(
-              listWidget: [
+            return LogoTemplate(
+              user: widget._user,
+              listWidget: const [
                 Expanded(
                   child: Center(
                     child: Text(
@@ -93,6 +95,7 @@ class _ListWidgetCandidatesState extends State<ListWidgetCandidates> {
             );
           } else if (snapshot.hasError) {
             return LogoTemplate(
+              user: widget._user,
               listWidget: [
                 Center(
                   child: Text('Errore: ${snapshot.error}'),
@@ -102,6 +105,7 @@ class _ListWidgetCandidatesState extends State<ListWidgetCandidates> {
           } else {
             List<Widget> data = snapshot.data as List<Widget>;
             return LogoTemplate(
+              user: widget._user,
               listWidget: [
                 Expanded(
                   child: ListView(

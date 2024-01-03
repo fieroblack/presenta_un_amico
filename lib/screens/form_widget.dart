@@ -12,28 +12,106 @@ import 'package:presenta_un_amico/utilities/constants.dart';
 import 'components/button_file_scanner.dart';
 
 class FormWidget extends StatelessWidget {
-  FormWidget({super.key, required this.user});
+  FormWidget({super.key, required LoggedInUser user}) : _user = user;
 
-  final LoggedInUser user;
+  final LoggedInUser _user;
   //0: Name, 1: LastName, 2: Email, 3: Telefono, 4: Level, 5: FilePath, 6: FileName
   final List<TextEditingController> _fieldList =
       List.generate(7, (index) => TextEditingController());
+
+  Future<void> submitValue(BuildContext context) async {
+    for (var i in _fieldList) {
+      if (i.text.isEmpty) {
+        if (context.mounted) {
+          FlutterGeneralServices.showSnackBar(
+              context, 'Tutti i campi devono essere compilati');
+          return;
+        }
+      }
+    }
+    String base64EncodedData = '';
+    try {
+      File file = File(_fieldList[5].text);
+
+      List<int> fileBytes = await file.readAsBytes();
+      base64EncodedData = base64Encode(fileBytes);
+    } catch (e) {
+      throw Exception('Error: $e');
+    }
+
+    for (TextEditingController i in _fieldList) {
+      if (i.text.isEmpty) {
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              duration: const Duration(seconds: 1),
+              content: const Text(
+                'Verificare che tutti i campi siano compilati',
+                textAlign: TextAlign.center,
+                style: kSnackStyle,
+              ),
+              backgroundColor: Colors.grey[300],
+            ),
+          );
+        }
+        return;
+      }
+    }
+
+    try {
+      if (context.mounted) {
+        FlutterGeneralServices.buildProgressIndicator(context);
+      }
+
+      var conn = await MySQLServices.connectToMySQL();
+      await MySQLServices.appendRow(
+          conn,
+          _user.email,
+          _fieldList[0].text,
+          _fieldList[1].text,
+          _fieldList[2].text,
+          _fieldList[3].text,
+          _fieldList[4].text,
+          base64EncodedData);
+      await MySQLServices.connectClose(conn);
+
+      for (TextEditingController i in _fieldList) {
+        i.clear();
+      }
+
+      SystemChannels.textInput.invokeMethod('TextInput.hide');
+
+      if (context.mounted) {
+        Navigator.pop(context);
+      }
+    } catch (e) {
+      if (context.mounted) {
+        Navigator.pop(context);
+        FlutterGeneralServices.showSnackBar(
+            context, 'Errore in fase di caricamento');
+      }
+    }
+    if (context.mounted) {
+      FlutterGeneralServices.showSnackBar(context, 'Caricamento effettuato');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: LogoTemplate(
+        user: _user,
         listWidget: [
           Row(
             children: [
               Text(
-                '${user.name} ${user.lastName}',
+                '${_user.name} ${_user.lastName}',
                 style: kTitleStyle,
               ),
               const SizedBox(
                 width: 5.0,
               ),
-              if (user.admin) const Icon(Icons.verified_user),
+              if (_user.admin) const Icon(Icons.verified_user),
             ],
           ),
           const Text(
@@ -110,73 +188,8 @@ class FormWidget extends StatelessWidget {
               style: ElevatedButton.styleFrom(
                 backgroundColor: LogoColor.greenLogoColor,
               ),
-              onPressed: () async {
-                String base64EncodedData = '';
-                try {
-                  File file = File(_fieldList[5].text);
-
-                  List<int> fileBytes = await file.readAsBytes();
-                  base64EncodedData = base64Encode(fileBytes);
-                } catch (e) {
-                  throw Exception('Error: $e');
-                }
-
-                for (TextEditingController i in _fieldList) {
-                  if (i.text.isEmpty) {
-                    if (context.mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          duration: const Duration(seconds: 1),
-                          content: const Text(
-                            'Verificare che tutti i campi siano compilati',
-                            textAlign: TextAlign.center,
-                            style: kSnackStyle,
-                          ),
-                          backgroundColor: Colors.grey[300],
-                        ),
-                      );
-                    }
-                    return;
-                  }
-                }
-
-                try {
-                  if (context.mounted) {
-                    FlutterGeneralServices.buildProgressIndicator(context);
-                  }
-
-                  var conn = await MySQLServices.connectToMySQL();
-                  await MySQLServices.appendRow(
-                      conn,
-                      user.email,
-                      _fieldList[0].text,
-                      _fieldList[1].text,
-                      _fieldList[2].text,
-                      _fieldList[3].text,
-                      _fieldList[4].text,
-                      base64EncodedData);
-                  await MySQLServices.connectClose(conn);
-
-                  for (TextEditingController i in _fieldList) {
-                    i.clear();
-                  }
-
-                  SystemChannels.textInput.invokeMethod('TextInput.hide');
-
-                  if (context.mounted) {
-                    Navigator.pop(context);
-                  }
-                } catch (e) {
-                  if (context.mounted) {
-                    Navigator.pop(context);
-                    FlutterGeneralServices.showSnackBar(
-                        context, 'Errore in fase di caricamento');
-                  }
-                }
-                if (context.mounted) {
-                  FlutterGeneralServices.showSnackBar(
-                      context, 'Caricamento effettuato');
-                }
+              onPressed: () {
+                submitValue(context);
               },
               child: const Text(
                 'Conferma dati',
