@@ -69,21 +69,18 @@ class MySQLServices {
   }
 
   static Future<dynamic> readPdfFile(var conn, int id) async {
-    // String query = "select file from candidates where id='$id'";
-    // dynamic exec = '';
-    // try {
-    //   exec = await conn.query(query);
-    // } catch (e) {
-    //   throw Exception('Cannot read record: $e');
-    // }
-    // return exec.first['file'];
     String query = "select file from candidates where id='$id'";
-    var results = await conn.query(query);
-    var base64EncodedData = results.first['file'].toString();
-    base64EncodedData = base64.normalize(base64EncodedData);
-    List<int> byteList = base64Decode(base64EncodedData);
-    print('2');
-    print('byteList: $byteList');
+    List<int> byteList = [];
+    try {
+      var results = await conn.query(query);
+      var base64EncodedData = results.first['file'].toString();
+      base64EncodedData = base64.normalize(base64EncodedData);
+      byteList = base64Decode(base64EncodedData);
+    } catch (e) {
+      //TODO gestire eccezione
+      throw Exception();
+    }
+
     return byteList;
   }
 
