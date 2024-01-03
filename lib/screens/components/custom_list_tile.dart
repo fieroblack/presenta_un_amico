@@ -12,7 +12,9 @@ class CustomListTile extends StatelessWidget {
     required String lastName,
     required DateTime date,
     required dynamic Function() func,
-  })  : _func = func,
+    required String promoter,
+  })  : _promoter = promoter,
+        _func = func,
         _date = date,
         _lastName = lastName,
         _name = name,
@@ -23,6 +25,7 @@ class CustomListTile extends StatelessWidget {
   final String _lastName;
   final DateTime _date;
   final Function() _func;
+  final String _promoter;
 
   //TODO Controllo admin
   static const bool admin = true;
@@ -52,7 +55,7 @@ class CustomListTile extends StatelessWidget {
       onLongPress: () {
         FlutterGeneralServices.showMaterialBanner(
           context,
-          "Sei sicuro di voler eliminare l'elemento selezionato?\n[$_name, $_lastName]",
+          "Sei sicuro di voler eliminare $_name $_lastName dall'elenco?",
           () async {
             try {
               await _deleteRecord(_id);
@@ -84,7 +87,7 @@ class CustomListTile extends StatelessWidget {
                 Text(
                   'Data inserimento: ${_date.day}/${_date.month}/${_date.year}',
                 ),
-                if (admin) const Text('Inserito da: Stefano Gallo'),
+                if (admin) Text('Inserito da: $_promoter'),
               ],
             ),
             const Icon(

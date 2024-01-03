@@ -39,6 +39,8 @@ class FormWidget extends StatelessWidget {
             children: [
               Flexible(
                 child: CustomTextInput(
+                  kType: TextInputType.text,
+                  textCapitalization: true,
                   controller: _fieldList[0],
                   label: 'Nome',
                   readOnly: false,
@@ -49,6 +51,8 @@ class FormWidget extends StatelessWidget {
               ),
               Flexible(
                 child: CustomTextInput(
+                  kType: TextInputType.text,
+                  textCapitalization: true,
                   controller: _fieldList[1],
                   label: 'Cognome',
                   readOnly: false,
@@ -57,16 +61,22 @@ class FormWidget extends StatelessWidget {
             ],
           ),
           CustomTextInput(
+            kType: TextInputType.emailAddress,
+            textCapitalization: false,
             controller: _fieldList[2],
             label: 'Email',
             readOnly: false,
           ),
           CustomTextInput(
+            kType: TextInputType.phone,
+            textCapitalization: false,
             controller: _fieldList[3],
             label: 'Telefono',
             readOnly: false,
           ),
           CustomTextInput(
+            kType: TextInputType.text,
+            textCapitalization: true,
             controller: _fieldList[4],
             label: 'Grado di conoscenza',
             readOnly: false,
@@ -75,7 +85,8 @@ class FormWidget extends StatelessWidget {
             children: [
               Flexible(
                 child: CustomTextInput(
-                  //TODO print just a file name
+                  kType: TextInputType.none,
+                  textCapitalization: true,
                   controller: _fieldList[6],
                   label: 'File da allegare',
                   readOnly: true,

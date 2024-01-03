@@ -40,12 +40,16 @@ class _ListWidgetCandidatesState extends State<ListWidgetCandidates> {
       throw Exception("Cannot upload the list $e");
     }
     for (var i in res) {
-      list.add(CustomListTile(
+      list.add(
+        CustomListTile(
           func: _refreshList,
           id: i['ID'],
           name: i['name'],
           lastName: i['lastName'],
-          date: i['date']));
+          date: i['date'],
+          promoter: i['promoter'],
+        ),
+      );
     }
 
     return list;
