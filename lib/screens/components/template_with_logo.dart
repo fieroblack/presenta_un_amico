@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
 class LogoTemplate extends StatelessWidget {
-  const LogoTemplate({super.key, required List<Widget> listWidget})
-      : _listWidget = listWidget;
+  const LogoTemplate({
+    super.key,
+    required List<Widget> listWidget,
+  }) : _listWidget = listWidget;
 
   final List<Widget> _listWidget;
 
@@ -10,9 +12,18 @@ class LogoTemplate extends StatelessWidget {
     List<Widget> list = [];
 
     list.add(
-      Image.asset(
-        'assets/images/iagica_logo.png',
-        scale: 12,
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Image.asset(
+            'assets/images/iagica_logo.png',
+            scale: 12,
+          ),
+          IconButton(
+            onPressed: () {},
+            icon: Icon(Icons.logout),
+          )
+        ],
       ),
     );
 

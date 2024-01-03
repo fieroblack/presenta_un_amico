@@ -7,13 +7,15 @@ import 'package:presenta_un_amico/screens/components/custom_text_input.dart';
 import 'package:presenta_un_amico/screens/components/template_with_logo.dart';
 import 'package:presenta_un_amico/services/flutter_general_services.dart';
 import 'package:presenta_un_amico/services/mysql-services.dart';
+import 'package:presenta_un_amico/services/userModel.dart';
 import 'package:presenta_un_amico/utilities/constants.dart';
 import 'components/button_file_scanner.dart';
 import 'package:path_provider/path_provider.dart';
 
 class FormWidget extends StatelessWidget {
-  FormWidget({super.key});
+  FormWidget({super.key, required this.user});
 
+  LoggedInUser user;
   //0: Name, 1: LastName, 2: Email, 3: Telefono, 4: Level, 5: File
   final List<TextEditingController> _fieldList =
       List.generate(6, (index) => TextEditingController());
@@ -24,9 +26,9 @@ class FormWidget extends StatelessWidget {
     return SingleChildScrollView(
       child: LogoTemplate(
         listWidget: [
-          const Text(
+          Text(
             //TODO should be a loggedin user
-            'Stefano Gallo',
+            '${user.name} ${user.lastName}',
             style: kTitleStyle,
           ),
           const Text(

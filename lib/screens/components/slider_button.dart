@@ -20,6 +20,7 @@ class SliderSubmit extends StatelessWidget {
       toggleColor: LogoColor.greenLogoColor,
       child: Text(_label),
       action: (controller) async {
+        //TODO gestione dell'errore dispose
         controller.loading();
         _func();
         controller.success();

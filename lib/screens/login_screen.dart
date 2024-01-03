@@ -60,13 +60,16 @@ class LoginScreen extends StatelessWidget {
                               context, "Si è verificato un errore, riprova.");
                         }
                       }
-                      print(user.loggedIn);
                       if (user.loggedIn) {
                         if (context.mounted) {
                           Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const MainPage()));
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => MainPage(
+                                user: user,
+                              ),
+                            ),
+                          );
                         }
                       }
                     },

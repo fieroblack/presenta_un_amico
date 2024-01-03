@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:presenta_un_amico/screens/form_widget.dart';
 import 'package:presenta_un_amico/screens/list_widget.dart';
+import 'package:presenta_un_amico/services/userModel.dart';
 import 'package:presenta_un_amico/utilities/constants.dart';
 
 class MainPage extends StatefulWidget {
-  const MainPage({super.key});
+  const MainPage({super.key, required this.user});
+
+  final LoggedInUser user;
 
   @override
   State<MainPage> createState() => _MainPageState();
@@ -12,20 +15,27 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   int _selectedIndex = 0;
-  Widget _bodyWidget = FormWidget();
+  late Widget _bodyWidget;
+  @override
+  void initState() {
+    _bodyWidget = FormWidget(
+      user: widget.user,
+    );
+    super.initState();
+  }
 
   void _changePage(int index) {
     setState(() {
       _selectedIndex = index;
       switch (index) {
         case 0:
-          _bodyWidget = FormWidget();
+          _bodyWidget = FormWidget(user: widget.user);
           break;
         case 1:
           _bodyWidget = const ListWidgetCandidates();
           break;
         default:
-          _bodyWidget = FormWidget();
+          _bodyWidget = FormWidget(user: widget.user);
           break;
       }
     });
