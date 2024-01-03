@@ -47,8 +47,13 @@ class MySQLServices {
     }
   }
 
-  static Future selectAll(var conn) async {
-    String query = "Select * from candidates order by id";
+  static Future selectAll(var conn, {String? promoter}) async {
+    String query =
+        "Select * from candidates where promoter='$promoter' order by id";
+    if (promoter == '') {
+      query = "Select * from candidates order by id";
+    }
+
     dynamic result;
     try {
       result = await conn.query(query);

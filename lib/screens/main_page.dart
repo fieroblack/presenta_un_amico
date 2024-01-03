@@ -32,7 +32,9 @@ class _MainPageState extends State<MainPage> {
           _bodyWidget = FormWidget(user: widget.user);
           break;
         case 1:
-          _bodyWidget = const ListWidgetCandidates();
+          _bodyWidget = ListWidgetCandidates(
+            user: widget.user,
+          );
           break;
         default:
           _bodyWidget = FormWidget(user: widget.user);

@@ -24,9 +24,17 @@ class FormWidget extends StatelessWidget {
     return SingleChildScrollView(
       child: LogoTemplate(
         listWidget: [
-          Text(
-            '${user.name} ${user.lastName}',
-            style: kTitleStyle,
+          Row(
+            children: [
+              Text(
+                '${user.name} ${user.lastName}',
+                style: kTitleStyle,
+              ),
+              const SizedBox(
+                width: 5.0,
+              ),
+              if (user.admin) const Icon(Icons.verified_user),
+            ],
           ),
           const Text(
             'Presentaci un amico!',
@@ -138,10 +146,9 @@ class FormWidget extends StatelessWidget {
                   }
 
                   var conn = await MySQLServices.connectToMySQL();
-                  await MySQLServices.selectAll(conn);
                   await MySQLServices.appendRow(
                       conn,
-                      '${user.name} ${user.lastName}',
+                      user.email,
                       _fieldList[0].text,
                       _fieldList[1].text,
                       _fieldList[2].text,

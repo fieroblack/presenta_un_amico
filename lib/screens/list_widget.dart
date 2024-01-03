@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:presenta_un_amico/screens/components/template_with_logo.dart';
 import 'package:presenta_un_amico/services/mysql-services.dart';
+import 'package:presenta_un_amico/services/user_model.dart';
 import 'package:presenta_un_amico/utilities/constants.dart';
 import 'components/custom_list_tile.dart';
 
 class ListWidgetCandidates extends StatefulWidget {
-  const ListWidgetCandidates({super.key});
+  const ListWidgetCandidates({super.key, required LoggedInUser user})
+      : _user = user;
 
-  static const bool admin = true;
+  final LoggedInUser _user;
 
   @override
   State<ListWidgetCandidates> createState() => _ListWidgetCandidatesState();
@@ -34,7 +36,8 @@ class _ListWidgetCandidatesState extends State<ListWidgetCandidates> {
     try {
       var conn = await MySQLServices.connectToMySQL();
       //TODO check admin or not
-      res = await MySQLServices.selectAll(conn);
+      res = await MySQLServices.selectAll(conn, promoter: widget._user.email);
+      print(widget._user.email);
       await MySQLServices.connectClose(conn);
     } catch (e) {
       throw Exception("Cannot upload the list $e");
