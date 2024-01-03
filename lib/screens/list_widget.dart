@@ -35,8 +35,12 @@ class _ListWidgetCandidatesState extends State<ListWidgetCandidates> {
     dynamic res;
     try {
       var conn = await MySQLServices.connectToMySQL();
-      //TODO check admin or not
-      res = await MySQLServices.selectAll(conn, promoter: widget._user.email);
+      if (!widget._user.admin) {
+        res = await MySQLServices.selectAll(conn, promoter: widget._user.email);
+      } else {
+        res = await MySQLServices.selectAll(conn);
+      }
+
       print(widget._user.email);
       await MySQLServices.connectClose(conn);
     } catch (e) {
