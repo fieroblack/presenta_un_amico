@@ -1,6 +1,4 @@
 import 'dart:convert';
-import 'dart:typed_data';
-
 import 'package:mysql1/mysql1.dart';
 import 'package:presenta_un_amico/services/userModel.dart';
 
@@ -18,7 +16,7 @@ class MySQLServices {
       var conn = await MySqlConnection.connect(settings);
       return conn;
     } catch (e) {
-      throw Exception('Connection error $e');
+      throw Exception('Error: $e');
     }
   }
 
@@ -26,7 +24,7 @@ class MySQLServices {
     try {
       await conn.close();
     } catch (e) {
-      throw Exception('Cannot close connection: $e');
+      throw Exception('Error: $e');
     }
   }
 
@@ -45,7 +43,7 @@ class MySQLServices {
     try {
       await conn.query(query);
     } catch (e) {
-      throw Exception('Cannot insert record: $e');
+      throw Exception('Error: $e');
     }
   }
 
@@ -55,7 +53,7 @@ class MySQLServices {
     try {
       result = await conn.query(query);
     } catch (e) {
-      throw Exception('Cannot insert record: $e');
+      throw Exception('Error: $e');
     }
     return result;
   }
@@ -65,7 +63,7 @@ class MySQLServices {
     try {
       await conn.query(query);
     } catch (e) {
-      throw Exception('Cannot insert record: $e');
+      throw Exception('Error: $e');
     }
   }
 
@@ -78,28 +76,10 @@ class MySQLServices {
       base64EncodedData = base64.normalize(base64EncodedData);
       byteList = base64Decode(base64EncodedData);
     } catch (e) {
-      //TODO gestire eccezione
-      throw Exception();
+      throw Exception('Error: $e');
     }
 
     return byteList;
-  }
-
-  //TODO delete this method
-  static Future<void> justForDebug() async {
-    try {
-      for (int i = 0; i < 10; i++) {
-        var conn = await MySQLServices.connectToMySQL();
-        String query =
-            "INSERT INTO candidates (promoter, name, lastName, email, tel, level, file, date) "
-            "VALUES ('promoter$i', 'name$i', 'lastname$i', 'email$i', 'tel$i', 'level$i', 'file$i', '${DateTime.now()}')";
-        await conn.query(query);
-        await MySQLServices.connectClose(conn);
-      }
-    } catch (e) {
-      print(e);
-      throw Exception('Cannot insert record: $e');
-    }
   }
 
   static Future<Map<String, dynamic>> logIn(var conn, LoggedInUser user) async {
@@ -109,7 +89,7 @@ class MySQLServices {
     try {
       datas = await conn.query(query);
     } catch (e) {
-      throw Exception('Cannot insert record: $e');
+      throw Exception('Error: $e');
     }
     if (datas.first['password'] == user.password) {
       results['Name'] = datas.first['name'];

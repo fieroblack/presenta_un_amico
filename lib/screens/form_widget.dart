@@ -16,9 +16,9 @@ class FormWidget extends StatelessWidget {
   FormWidget({super.key, required this.user});
 
   LoggedInUser user;
-  //0: Name, 1: LastName, 2: Email, 3: Telefono, 4: Level, 5: File
+  //0: Name, 1: LastName, 2: Email, 3: Telefono, 4: Level, 5: FilePath, 6: FileName
   final List<TextEditingController> _fieldList =
-      List.generate(6, (index) => TextEditingController());
+      List.generate(7, (index) => TextEditingController());
   List<int> bytes = [];
 
   @override
@@ -27,7 +27,6 @@ class FormWidget extends StatelessWidget {
       child: LogoTemplate(
         listWidget: [
           Text(
-            //TODO should be a loggedin user
             '${user.name} ${user.lastName}',
             style: kTitleStyle,
           ),
@@ -79,13 +78,13 @@ class FormWidget extends StatelessWidget {
               Flexible(
                 child: CustomTextInput(
                   //TODO print just a file name
-                  controller: _fieldList[5],
+                  controller: _fieldList[6],
                   label: 'File da allegare',
                   readOnly: true,
                 ),
               ),
               ButtonFileScanner(
-                controller: _fieldList[5],
+                controller: [_fieldList[5], _fieldList[6]],
               ),
             ],
           ),
@@ -101,13 +100,8 @@ class FormWidget extends StatelessWidget {
 
                   List<int> fileBytes = await file.readAsBytes();
                   base64EncodedData = base64Encode(fileBytes);
-                  // ByteData data =
-                  //     ByteData.sublistView(Uint8List.fromList(fileBytes));
-                  // uint8List = data.buffer.asUint8List();
-                  print('updated: ${base64EncodedData}');
                 } catch (e) {
-                  //TODO exception handle
-                  print(e);
+                  throw Exception('Error: $e');
                 }
 
                 for (TextEditingController i in _fieldList) {
@@ -133,8 +127,7 @@ class FormWidget extends StatelessWidget {
                   await MySQLServices.selectAll(conn);
                   await MySQLServices.appendRow(
                       conn,
-                      //TODO ----> promoter, who is logged in
-                      'Stefano Gallo',
+                      '${user.name} ${user.lastName}',
                       _fieldList[0].text,
                       _fieldList[1].text,
                       _fieldList[2].text,

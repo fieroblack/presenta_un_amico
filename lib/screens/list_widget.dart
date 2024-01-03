@@ -53,7 +53,6 @@ class _ListWidgetCandidatesState extends State<ListWidgetCandidates> {
 
   @override
   Widget build(BuildContext context) {
-    //TODO testare in mancanza di connessione
     return FutureBuilder(
         future: _listFuture,
         builder: (context, snapshot) {
