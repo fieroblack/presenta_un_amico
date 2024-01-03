@@ -80,7 +80,9 @@ class MySQLServices {
     String query = "select file from candidates where id='$id'";
     var results = await conn.query(query);
     var base64EncodedData = results.first['file'].toString();
-    List<int> byteList = base64.decode(base64EncodedData);
+    base64EncodedData = base64.normalize(base64EncodedData);
+    List<int> byteList = base64Decode(base64EncodedData);
+    print('2');
     print('byteList: $byteList');
     return byteList;
   }

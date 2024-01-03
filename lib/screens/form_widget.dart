@@ -98,7 +98,7 @@ class FormWidget extends StatelessWidget {
                   File file = File(_fieldList[5].text);
 
                   List<int> fileBytes = await file.readAsBytes();
-                  base64EncodedData = base64.encode(fileBytes);
+                  base64EncodedData = base64Encode(fileBytes);
                   // ByteData data =
                   //     ByteData.sublistView(Uint8List.fromList(fileBytes));
                   // uint8List = data.buffer.asUint8List();

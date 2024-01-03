@@ -15,8 +15,8 @@ class ButtonFileScanner extends StatelessWidget {
     return IconButton(
       onPressed: () async {
         //TODO write a function to select file
-        FilePickerResult? res =
-            await FilePicker.platform.pickFiles(withData: true);
+        FilePickerResult? res = await FilePicker.platform.pickFiles(
+            withData: true, type: FileType.custom, allowedExtensions: ['PDF']);
         if (res != null) {
           _controller.text = res.files.first.path.toString();
           print('selected: ${res.files.first.bytes}');

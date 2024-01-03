@@ -1,5 +1,3 @@
-import 'dart:typed_data';
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:presenta_un_amico/services/mysql-services.dart';
 import 'package:presenta_un_amico/utilities/constants.dart';
@@ -29,7 +27,7 @@ class DetailPage extends StatelessWidget {
       var conn = await MySQLServices.connectToMySQL();
       var datas = await MySQLServices.readPdfFile(conn, _id);
       await MySQLServices.connectClose(conn);
-
+      print(datas.toString().substring(65534, 65539));
       list.add(SfPdfViewer.memory(datas));
     } catch (e) {
       print(e);
