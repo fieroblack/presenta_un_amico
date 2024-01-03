@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:presenta_un_amico/screens/main_page.dart';
+import 'package:presenta_un_amico/screens/login_screen.dart';
 import 'package:presenta_un_amico/services/mysql-services.dart';
+import 'package:presenta_un_amico/services/userModel.dart';
+
 import 'package:presenta_un_amico/utilities/constants.dart';
 
 void main() async {
@@ -19,7 +21,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: LogoColor.greenLogoColor),
         useMaterial3: true,
       ),
-      home: const MainPage(),
+      home: LoginScreen(),
     );
   }
 }

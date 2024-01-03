@@ -6,11 +6,14 @@ class CustomEmPwInput extends StatefulWidget {
     super.key,
     required String hintText,
     required bool pwd,
-  })  : _pwd = pwd,
+    required TextEditingController controller,
+  })  : _controller = controller,
+        _pwd = pwd,
         _hintText = hintText;
 
   final String _hintText;
   final bool _pwd;
+  final TextEditingController _controller;
 
   @override
   State<CustomEmPwInput> createState() => _CustomEmPwInputState();
@@ -46,6 +49,7 @@ class _CustomEmPwInputState extends State<CustomEmPwInput> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 0.0, vertical: 10.0),
       child: TextField(
+        controller: widget._controller,
         style: kUserPwdTextStyle,
         obscureText: _isVisible,
         keyboardType: widget._pwd

@@ -3,12 +3,13 @@ import 'package:flutter/material.dart';
 import '../../utilities/constants.dart';
 
 class SliderSubmit extends StatelessWidget {
-  const SliderSubmit({
-    super.key,
-    required String label,
-  }) : _label = label;
+  const SliderSubmit(
+      {super.key, required String label, required Function() func})
+      : _func = func,
+        _label = label;
 
   final String _label;
+  final Function() _func;
 
   @override
   Widget build(BuildContext context) {
@@ -20,8 +21,10 @@ class SliderSubmit extends StatelessWidget {
       child: Text(_label),
       action: (controller) async {
         controller.loading();
-        await Future.delayed(const Duration(seconds: 1));
+        _func();
         controller.success();
+        await Future.delayed(const Duration(milliseconds: 500));
+
         await Future.delayed(const Duration(seconds: 1));
         controller.reset();
       },

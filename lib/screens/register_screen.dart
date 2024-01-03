@@ -25,19 +25,19 @@ class RegisterScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const CustomEmPwInput(
-                    hintText: 'Username',
-                    pwd: false,
-                  ),
-                  const CustomEmPwInput(
-                    hintText: 'Password',
-                    pwd: true,
-                  ),
-                  const CustomEmPwInput(
-                    hintText: 'Confirm password',
-                    pwd: true,
-                  ),
-                  const SliderSubmit(label: 'Scorri per registrarti'),
+                  // const CustomEmPwInput(
+                  //   hintText: 'Username',
+                  //   pwd: false,
+                  // ),
+                  // const CustomEmPwInput(
+                  //   hintText: 'Password',
+                  //   pwd: true,
+                  // ),
+                  // const CustomEmPwInput(
+                  //   hintText: 'Confirm password',
+                  //   pwd: true,
+                  // ),
+                  // const SliderSubmit(label: 'Scorri per registrarti'),
                   const SizedBox(
                     height: 30.0,
                   ),

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:mysql1/mysql1.dart';
+import 'package:presenta_un_amico/services/userModel.dart';
 
 class MySQLServices {
   static const String _host = 'db647.webme.it';
@@ -99,5 +100,26 @@ class MySQLServices {
       print(e);
       throw Exception('Cannot insert record: $e');
     }
+  }
+
+  static Future<Map<String, dynamic>> logIn(var conn, LoggedInUser user) async {
+    String query = "SELECT * FROM users where email='${user.email}'";
+    Map<String, dynamic> results = {};
+    dynamic datas = '';
+    try {
+      datas = await conn.query(query);
+    } catch (e) {
+      throw Exception('Cannot insert record: $e');
+    }
+    if (datas.first['password'] == user.password) {
+      results['Name'] = datas.first['name'];
+      results['LastName'] = datas.first['lastName'];
+      if (datas.first['rule'] == 1) {
+        results['Rule'] = true;
+      } else {
+        results['Rule'] = false;
+      }
+    }
+    return results;
   }
 }
