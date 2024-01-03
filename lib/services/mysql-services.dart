@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:mysql1/mysql1.dart';
-import 'package:presenta_un_amico/services/userModel.dart';
+import 'package:presenta_un_amico/services/user_model.dart';
 
 class MySQLServices {
   static const String _host = 'db647.webme.it';

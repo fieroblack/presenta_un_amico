@@ -40,12 +40,12 @@ class FlutterGeneralServices {
                 func();
                 ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
               },
-              child: Text('Si')),
+              child: const Text('Si')),
           TextButton(
               onPressed: () {
                 ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
               },
-              child: Text('No'))
+              child: const Text('No'))
         ],
       ),
     );

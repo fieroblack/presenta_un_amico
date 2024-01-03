@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:presenta_un_amico/screens/components/slider_button.dart';
-import 'components/custom_email_pwd_input.dart';
 import 'components/row_button.dart';
 
 class RegisterScreen extends StatelessWidget {

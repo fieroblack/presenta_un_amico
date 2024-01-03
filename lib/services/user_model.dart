@@ -1,5 +1,3 @@
-import 'package:presenta_un_amico/services/mysql-services.dart';
-
 class LoggedInUser {
   LoggedInUser(this._email, this._password);
 

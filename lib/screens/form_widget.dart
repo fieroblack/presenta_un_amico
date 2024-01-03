@@ -7,19 +7,17 @@ import 'package:presenta_un_amico/screens/components/custom_text_input.dart';
 import 'package:presenta_un_amico/screens/components/template_with_logo.dart';
 import 'package:presenta_un_amico/services/flutter_general_services.dart';
 import 'package:presenta_un_amico/services/mysql-services.dart';
-import 'package:presenta_un_amico/services/userModel.dart';
+import 'package:presenta_un_amico/services/user_model.dart';
 import 'package:presenta_un_amico/utilities/constants.dart';
 import 'components/button_file_scanner.dart';
-import 'package:path_provider/path_provider.dart';
 
 class FormWidget extends StatelessWidget {
   FormWidget({super.key, required this.user});
 
-  LoggedInUser user;
+  final LoggedInUser user;
   //0: Name, 1: LastName, 2: Email, 3: Telefono, 4: Level, 5: FilePath, 6: FileName
   final List<TextEditingController> _fieldList =
       List.generate(7, (index) => TextEditingController());
-  List<int> bytes = [];
 
   @override
   Widget build(BuildContext context) {
@@ -106,23 +104,28 @@ class FormWidget extends StatelessWidget {
 
                 for (TextEditingController i in _fieldList) {
                   if (i.text.isEmpty) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        duration: const Duration(seconds: 1),
-                        content: const Text(
-                          'Verificare che tutti i campi siano compilati',
-                          textAlign: TextAlign.center,
-                          style: kSnackStyle,
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          duration: const Duration(seconds: 1),
+                          content: const Text(
+                            'Verificare che tutti i campi siano compilati',
+                            textAlign: TextAlign.center,
+                            style: kSnackStyle,
+                          ),
+                          backgroundColor: Colors.grey[300],
                         ),
-                        backgroundColor: Colors.grey[300],
-                      ),
-                    );
+                      );
+                    }
                     return;
                   }
                 }
 
                 try {
-                  FlutterGeneralServices.buildProgressIndicator(context);
+                  if (context.mounted) {
+                    FlutterGeneralServices.buildProgressIndicator(context);
+                  }
+
                   var conn = await MySQLServices.connectToMySQL();
                   await MySQLServices.selectAll(conn);
                   await MySQLServices.appendRow(
@@ -152,8 +155,10 @@ class FormWidget extends StatelessWidget {
                         context, 'Errore in fase di caricamento');
                   }
                 }
-                FlutterGeneralServices.showSnackBar(
-                    context, 'Caricamento effettuato');
+                if (context.mounted) {
+                  FlutterGeneralServices.showSnackBar(
+                      context, 'Caricamento effettuato');
+                }
               },
               child: const Text(
                 'Conferma dati',

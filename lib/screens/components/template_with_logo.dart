@@ -21,7 +21,7 @@ class LogoTemplate extends StatelessWidget {
           ),
           IconButton(
             onPressed: () {},
-            icon: Icon(Icons.logout),
+            icon: const Icon(Icons.logout),
           )
         ],
       ),

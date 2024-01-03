@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:presenta_un_amico/screens/login_screen.dart';
-import 'package:presenta_un_amico/services/mysql-services.dart';
-import 'package:presenta_un_amico/services/userModel.dart';
-
 import 'package:presenta_un_amico/utilities/constants.dart';
 
 void main() async {

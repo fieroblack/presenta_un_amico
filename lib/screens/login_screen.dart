@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:presenta_un_amico/services/flutter_general_services.dart';
 import 'package:presenta_un_amico/services/mysql-services.dart';
-import 'package:presenta_un_amico/services/userModel.dart';
+import 'package:presenta_un_amico/services/user_model.dart';
 import 'components/custom_email_pwd_input.dart';
 import 'components/row_button.dart';
 import 'components/slider_button.dart';
@@ -53,7 +53,6 @@ class LoginScreen extends StatelessWidget {
                         await MySQLServices.connectClose(conn);
                         user.setParameter(datas);
                         user.setLoggedInOut();
-                        print(user.loggedIn);
                       } catch (e) {
                         if (context.mounted) {
                           FlutterGeneralServices.showSnackBar(

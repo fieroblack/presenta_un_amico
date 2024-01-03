@@ -3,6 +3,8 @@ import 'package:presenta_un_amico/services/mysql-services.dart';
 import 'package:presenta_un_amico/utilities/constants.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
+import 'components/template_with_logo.dart';
+
 class DetailPage extends StatelessWidget {
   const DetailPage(
       {super.key,
@@ -23,14 +25,12 @@ class DetailPage extends StatelessWidget {
   Future<List<Widget>> _recoverData() async {
     List<Widget> list = [];
     try {
-      print('-----------------');
       var conn = await MySQLServices.connectToMySQL();
       var datas = await MySQLServices.readPdfFile(conn, _id);
       await MySQLServices.connectClose(conn);
-      print(datas.toString().substring(65534, 65539));
       list.add(SfPdfViewer.memory(datas));
     } catch (e) {
-      print(e);
+      throw Exception('Error: $e');
     }
     return list;
   }
@@ -47,56 +47,64 @@ class DetailPage extends StatelessWidget {
             ),
           );
         } else if (snapshot.data!.isEmpty) {
-          print('snapshot.data!.isEmpty');
-          return Center(
-            child: CircularProgressIndicator(
-              color: LogoColor.greenLogoColor,
-            ),
-          );
+          return const Center(
+              child: LogoTemplate(
+            listWidget: [
+              Expanded(
+                child: Center(
+                  child: Text(
+                    'Elenco vuoto',
+                  ),
+                ),
+              )
+            ],
+          ));
         } else if (snapshot.hasError) {
-          print('snapshot.hasError');
-          return Placeholder();
+          return LogoTemplate(
+            listWidget: [
+              Center(
+                child: Text('Errore: ${snapshot.error}'),
+              ),
+            ],
+          );
         } else {
-          print('ok');
           List<Widget> data = snapshot.data as List<Widget>;
           return Dialog(
-            child: Container(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Text(
-                    'Id: ${_id.toString()}',
-                    style: kTitleStyle,
-                    textAlign: TextAlign.center,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        _name.toString(),
-                        style: kTitleStyle,
-                      ),
-                      const SizedBox(
-                        width: 10.0,
-                      ),
-                      Text(
-                        _lastName.toString(),
-                        style: kTitleStyle,
-                      )
-                    ],
-                  ),
-                  Text(
-                    'Data inserimento: ${_date.day}/${_date.month}/${_date.year}',
-                    textAlign: TextAlign.center,
-                  ),
-                  Expanded(
-                      child: Padding(
-                    padding: EdgeInsets.all(25.0),
-                    child: data[0],
-                  )),
-                ],
-              ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Text(
+                  'Id: ${_id.toString()}',
+                  style: kTitleStyle,
+                  textAlign: TextAlign.center,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      _name.toString(),
+                      style: kTitleStyle,
+                    ),
+                    const SizedBox(
+                      width: 10.0,
+                    ),
+                    Text(
+                      _lastName.toString(),
+                      style: kTitleStyle,
+                    )
+                  ],
+                ),
+                Text(
+                  'Data inserimento: ${_date.day}/${_date.month}/${_date.year}',
+                  textAlign: TextAlign.center,
+                ),
+                Expanded(
+                    child: Padding(
+                  padding: const EdgeInsets.all(25.0),
+                  child: data[0],
+                )),
+              ],
             ),
           );
         }
