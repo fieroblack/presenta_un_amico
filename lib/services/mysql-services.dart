@@ -124,4 +124,19 @@ class MySQLServices {
       throw Exception('Error: $e');
     }
   }
+
+  static Future selectAllUsers(var conn, {String? email}) async {
+    String query = "Select email from users where email='$email'";
+    if (email == null) {
+      query = "Select email from users";
+    }
+
+    dynamic result;
+    try {
+      result = await conn.query(query);
+    } catch (e) {
+      throw Exception('Error: $e');
+    }
+    return result;
+  }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:presenta_un_amico/screens/components/add_new_user.dart';
+import 'package:presenta_un_amico/screens/components/manage_user.dart';
 import 'package:presenta_un_amico/services/user_model.dart';
 
 class AccountSetting extends StatefulWidget {
@@ -12,12 +13,14 @@ class AccountSetting extends StatefulWidget {
 }
 
 class _AccountSettingState extends State<AccountSetting> {
-  Future<void> resetPassword(BuildContext context) async {
-    //TODO implementare metodo per reset password
-  }
-
   List<bool> isSelected = [true, false];
-  Widget frame = const Center(child: Text('Gestisci account'));
+  late Widget frame;
+
+  @override
+  void initState() {
+    frame = ManageUsers(user: widget._user);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,11 +52,13 @@ class _AccountSettingState extends State<AccountSetting> {
                           }
                         }
                         if (index == 0) {
-                          frame = const Center(
-                            child: Text('Gestisci account'),
+                          frame = Center(
+                            child: ManageUsers(
+                              user: widget._user,
+                            ),
                           );
                         } else {
-                          frame = AddNewUserFrame();
+                          frame = const AddNewUserFrame();
                         }
                       },
                     );

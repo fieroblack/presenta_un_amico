@@ -56,12 +56,14 @@ class _CustomEmPwInputState extends State<CustomEmPwInput> {
             ? TextInputType.visiblePassword
             : TextInputType.emailAddress,
         decoration: InputDecoration(
-          suffixIcon: IconButton(
-            icon: Icon(_suffixIcon),
-            onPressed: () {
-              _setVisibility();
-            },
-          ),
+          suffixIcon: widget._pwd
+              ? IconButton(
+                  icon: Icon(_suffixIcon),
+                  onPressed: () {
+                    _setVisibility();
+                  },
+                )
+              : Icon(_suffixIcon),
           labelText: widget._hintText,
           hintStyle: kHintTextStyle,
           contentPadding: const EdgeInsets.all(20.0),

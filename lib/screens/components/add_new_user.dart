@@ -82,8 +82,8 @@ class _AddNewUserFrameState extends State<AddNewUserFrame> {
             label: 'Email',
             readOnly: false,
             controller: _fieldController[2],
-            textCapitalization: true,
-            kType: TextInputType.text),
+            textCapitalization: false,
+            kType: TextInputType.emailAddress),
         CustomEmPwInput(
           hintText: 'Password',
           pwd: true,
@@ -96,13 +96,17 @@ class _AddNewUserFrameState extends State<AddNewUserFrame> {
               'Amministratore',
               style: kLabelStyle,
             ),
-            Checkbox(
+            const SizedBox(
+              width: 10.0,
+            ),
+            Switch(
+                activeTrackColor: LogoColor.greenLogoColor,
                 value: _value,
                 onChanged: (bool? value) {
                   setState(() {
                     _value = value!;
                   });
-                }),
+                })
           ],
         ),
         const SizedBox(
