@@ -1,3 +1,7 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
+import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:presenta_un_amico/screens/components/custom_email_pwd_input.dart';
 import 'package:presenta_un_amico/screens/components/custom_text_input.dart';
@@ -30,6 +34,8 @@ class _AddNewUserFrameState extends State<AddNewUserFrame> {
         }
       }
     }
+    Uint8List data = Uint8List.fromList(utf8.encode(_fieldController[3].text));
+    String hashedPassword = sha256.convert(data).toString();
     try {
       var conn = await MySQLServices.connectToMySQL();
       await MySQLServices.appendRowUsers(
@@ -37,13 +43,12 @@ class _AddNewUserFrameState extends State<AddNewUserFrame> {
           _fieldController[0].text,
           _fieldController[1].text,
           _fieldController[2].text,
-          _fieldController[3].text,
+          hashedPassword,
           _value ? 1 : 0);
       await MySQLServices.connectClose(conn);
     } catch (e) {
       if (context.mounted) {
         Navigator.pop(context);
-        print(e);
         FlutterGeneralServices.showSnackBar(
             context, 'Qualcosa è andato storto');
         return;

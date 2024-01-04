@@ -3,7 +3,7 @@ import 'package:presenta_un_amico/screens/components/add_new_user.dart';
 import 'package:presenta_un_amico/services/user_model.dart';
 
 class AccountSetting extends StatefulWidget {
-  AccountSetting({super.key, required LoggedInUser user}) : _user = user;
+  const AccountSetting({super.key, required LoggedInUser user}) : _user = user;
 
   final LoggedInUser _user;
 
@@ -17,7 +17,7 @@ class _AccountSettingState extends State<AccountSetting> {
   }
 
   List<bool> isSelected = [true, false];
-  Widget frame = Center(child: Text('Gestisci account'));
+  Widget frame = const Center(child: Text('Gestisci account'));
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +49,7 @@ class _AccountSettingState extends State<AccountSetting> {
                           }
                         }
                         if (index == 0) {
-                          frame = Center(
+                          frame = const Center(
                             child: Text('Gestisci account'),
                           );
                         } else {

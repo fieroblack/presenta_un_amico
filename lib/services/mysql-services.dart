@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'dart:typed_data';
+import 'package:crypto/crypto.dart';
 import 'package:mysql1/mysql1.dart';
 import 'package:presenta_un_amico/services/user_model.dart';
 
@@ -96,7 +98,11 @@ class MySQLServices {
     } catch (e) {
       throw Exception('Error: $e');
     }
-    if (datas.first['password'] == user.password) {
+    Uint8List data = Uint8List.fromList(utf8.encode(user.password));
+    String hashedPassword = sha256.convert(data).toString();
+    print(hashedPassword);
+
+    if (datas.first['password'] == hashedPassword) {
       results['Name'] = datas.first['name'];
       results['LastName'] = datas.first['lastName'];
       if (datas.first['rule'] == 1) {
