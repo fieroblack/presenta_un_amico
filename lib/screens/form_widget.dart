@@ -64,7 +64,7 @@ class FormWidget extends StatelessWidget {
       }
 
       var conn = await MySQLServices.connectToMySQL();
-      await MySQLServices.appendRow(
+      await MySQLServices.appendRowCandidates(
           conn,
           _user.email,
           _fieldList[0].text,

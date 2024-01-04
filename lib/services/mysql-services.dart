@@ -28,7 +28,7 @@ class MySQLServices {
     }
   }
 
-  static Future<void> appendRow(
+  static Future<void> appendRowCandidates(
       var conn,
       String promoter,
       String name,
@@ -108,5 +108,14 @@ class MySQLServices {
     return results;
   }
 
-  //TODO implementare metodo per reset password
+  static Future<void> appendRowUsers(var conn, String name, String lastName,
+      String email, String password, int admin) async {
+    String query = "INSERT INTO users (name, lastName, email, password, rule) "
+        "VALUES ('$name', '$lastName', '$email', '$password', '$admin')";
+    try {
+      await conn.query(query);
+    } catch (e) {
+      throw Exception('Error: $e');
+    }
+  }
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:presenta_un_amico/screens/login_screen.dart';
-import 'package:presenta_un_amico/screens/pass_reset.dart';
+import 'package:presenta_un_amico/screens/account_setting.dart';
 import 'package:presenta_un_amico/services/user_model.dart';
 
 class LogoTemplate extends StatelessWidget {
@@ -33,31 +33,20 @@ class LogoTemplate extends StatelessWidget {
                   showDialog(
                     context: context,
                     builder: (BuildContext context) {
-                      return ResetPassword();
+                      return AccountSetting(
+                        user: _user,
+                      );
                     },
                   );
                 },
                 child: const Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('Resetta password'),
-                    Icon(Icons.password),
+                    Text('Gestione account'),
+                    Icon(Icons.manage_accounts),
                   ],
                 ),
               ),
-              if (_user.admin)
-                PopupMenuItem<String>(
-                  onTap: () {
-                    print('aggiungi un utente');
-                  },
-                  child: const Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text('Gestione utenti'),
-                      Icon(Icons.manage_accounts),
-                    ],
-                  ),
-                ),
               PopupMenuItem<String>(
                 onTap: () {
                   Navigator.pushReplacement(context,
