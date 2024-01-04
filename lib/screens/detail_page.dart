@@ -90,11 +90,13 @@ class DetailPage extends StatelessWidget {
                   'Data inserimento: ${_date.day}/${_date.month}/${_date.year}',
                   textAlign: TextAlign.center,
                 ),
-                Expanded(
-                    child: Padding(
-                  padding: const EdgeInsets.all(25.0),
-                  child: data[0],
-                )),
+                Container(
+                  height: 450.0,
+                  child: Padding(
+                    padding: const EdgeInsets.all(25.0),
+                    child: data[0],
+                  ),
+                ),
               ],
             ),
           );

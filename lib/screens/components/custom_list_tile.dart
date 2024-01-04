@@ -1,19 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:presenta_un_amico/screens/detail_page.dart';
 import 'package:presenta_un_amico/services/flutter_general_services.dart';
+import 'package:presenta_un_amico/services/user_model.dart';
 import '../../services/mysql-services.dart';
 import '../../utilities/constants.dart';
 
 class CustomListTile extends StatelessWidget {
-  const CustomListTile({
-    super.key,
-    required int id,
-    required String name,
-    required String lastName,
-    required DateTime date,
-    required dynamic Function() func,
-    required String promoter,
-  })  : _promoter = promoter,
+  CustomListTile(
+      {super.key,
+      required int id,
+      required String name,
+      required String lastName,
+      required DateTime date,
+      required dynamic Function() func,
+      required String promoter,
+      required LoggedInUser user})
+      : _user = user,
+        _promoter = promoter,
         _func = func,
         _date = date,
         _lastName = lastName,
@@ -26,9 +29,7 @@ class CustomListTile extends StatelessWidget {
   final DateTime _date;
   final Function() _func;
   final String _promoter;
-
-  //TODO Controllo admin
-  static const bool admin = true;
+  final LoggedInUser _user;
 
   Future<void> _deleteRecord(int id) async {
     var conn = await MySQLServices.connectToMySQL();
@@ -87,7 +88,7 @@ class CustomListTile extends StatelessWidget {
                 Text(
                   'Data inserimento: ${_date.day}/${_date.month}/${_date.year}',
                 ),
-                if (admin) Text('Inserito da: $_promoter'),
+                if (_user.admin) Text('Inserito da: $_promoter'),
               ],
             ),
             const Icon(

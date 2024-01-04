@@ -48,6 +48,7 @@ class _ListWidgetCandidatesState extends State<ListWidgetCandidates> {
     for (var i in res) {
       list.add(
         CustomListTile(
+          user: widget._user,
           func: _refreshList,
           id: i['ID'],
           name: i['name'],

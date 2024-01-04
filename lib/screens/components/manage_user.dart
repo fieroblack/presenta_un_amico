@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:presenta_un_amico/screens/components/custom_email_pwd_input.dart';
 import 'package:presenta_un_amico/services/mysql-services.dart';
 import 'package:presenta_un_amico/services/user_model.dart';
-
 import '../../utilities/constants.dart';
 
 class ManageUsers extends StatefulWidget {
@@ -15,6 +14,8 @@ class ManageUsers extends StatefulWidget {
 }
 
 class _ManageUsersState extends State<ManageUsers> {
+  //TODO implementare gestione account
+
   late Future<List<Widget>> _listFuture;
   late String _selectedValue;
 
