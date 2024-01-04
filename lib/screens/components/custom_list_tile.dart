@@ -72,7 +72,7 @@ class CustomListTile extends StatelessWidget {
         padding: const EdgeInsets.all(10.0),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15.0),
-          color: Colors.grey[200],
+          color: LogoColor.greenComponentColor,
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,

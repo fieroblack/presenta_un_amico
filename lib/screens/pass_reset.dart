@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:presenta_un_amico/screens/components/custom_email_pwd_input.dart';
-import 'package:presenta_un_amico/services/flutter_general_services.dart';
 
 import '../utilities/constants.dart';
 
@@ -11,13 +10,7 @@ class ResetPassword extends StatelessWidget {
       List.generate(3, (index) => TextEditingController());
 
   Future<void> resetPassword(BuildContext context) async {
-    if (_fieldsControl[0].text.isEmpty) {
-      Navigator.pop(context);
-      if (context.mounted) {
-        FlutterGeneralServices.showSnackBar(
-            context, 'Tutti i campi devono essere compilati');
-      }
-    }
+    //TODO implementare metodo per reset password
   }
 
   @override

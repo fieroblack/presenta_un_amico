@@ -107,4 +107,6 @@ class MySQLServices {
     }
     return results;
   }
+
+  //TODO implementare metodo per reset password
 }

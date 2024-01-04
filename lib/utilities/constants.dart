@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 class LogoColor {
   static const Color _kRedLogoColor = Color(0xffE32D3A);
   static const Color _kGreenLogoColor = Color(0xff3EFB00);
+  static const Color _kGreenComponentColor = Color(0xffEAF1E2);
 
   static Color get redLogoColor => _kRedLogoColor;
   static Color get greenLogoColor => _kGreenLogoColor;
+  static Color get greenComponentColor => _kGreenComponentColor;
 }
 
 final TextStyle kHintTextStyle = TextStyle(
