@@ -5,7 +5,6 @@ import 'package:presenta_un_amico/services/user_model.dart';
 import 'components/custom_email_pwd_input.dart';
 import 'components/row_button.dart';
 import 'components/slider_button.dart';
-import 'main_page.dart';
 
 class LoginScreen extends StatelessWidget {
   LoginScreen({super.key});
@@ -59,18 +58,7 @@ class LoginScreen extends StatelessWidget {
                               context, "Si è verificato un errore, riprova.");
                         }
                       }
-                      if (user.loggedIn) {
-                        if (context.mounted) {
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => MainPage(
-                                user: user,
-                              ),
-                            ),
-                          );
-                        }
-                      }
+                      return user;
                     },
                   ),
                   const SizedBox(
