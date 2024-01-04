@@ -101,7 +101,6 @@ class MySQLServices {
     }
     Uint8List data = Uint8List.fromList(utf8.encode(user.password));
     String hashedPassword = sha256.convert(data).toString();
-    print(hashedPassword);
 
     if (datas.first['password'] == hashedPassword) {
       results['Name'] = datas.first['name'];

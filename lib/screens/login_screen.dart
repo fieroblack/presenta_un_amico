@@ -3,7 +3,6 @@ import 'package:presenta_un_amico/services/flutter_general_services.dart';
 import 'package:presenta_un_amico/services/mysql-services.dart';
 import 'package:presenta_un_amico/services/user_model.dart';
 import 'components/custom_email_pwd_input.dart';
-import 'components/row_button.dart';
 import 'components/slider_button.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -64,12 +63,6 @@ class LoginScreen extends StatelessWidget {
                   const SizedBox(
                     height: 30.0,
                   ),
-                  RowButton(
-                      label: 'Non sei ancora registrato?',
-                      textForButton: 'Fallo subito!',
-                      func: () {
-                        //TODO capire se la registrazione va lasciata in gestione agli admin
-                      })
                 ],
               ),
             )

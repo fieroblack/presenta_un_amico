@@ -41,7 +41,6 @@ class _ListWidgetCandidatesState extends State<ListWidgetCandidates> {
         res = await MySQLServices.selectAll(conn);
       }
 
-      print(widget._user.email);
       await MySQLServices.connectClose(conn);
     } catch (e) {
       throw Exception("Cannot upload the list $e");

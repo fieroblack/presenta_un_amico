@@ -11,7 +11,7 @@ import 'package:presenta_un_amico/services/mysql-services.dart';
 import '../../utilities/constants.dart';
 
 class AddNewUserFrame extends StatefulWidget {
-  AddNewUserFrame({super.key});
+  const AddNewUserFrame({super.key});
 
   @override
   State<AddNewUserFrame> createState() => _AddNewUserFrameState();
