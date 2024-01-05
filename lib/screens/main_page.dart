@@ -27,7 +27,7 @@ class _MainPageState extends State<MainPage> {
           _bodyWidget = FormWidget();
           break;
         case 1:
-          _bodyWidget = ListWidgetCandidates();
+          _bodyWidget = const ListWidgetCandidates();
           break;
         default:
           _bodyWidget = FormWidget();

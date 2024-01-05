@@ -7,7 +7,7 @@ import '../../services/mysql-services.dart';
 import '../../utilities/constants.dart';
 
 class CustomListTile extends StatelessWidget {
-  CustomListTile({
+  const CustomListTile({
     super.key,
     required int id,
     required String name,

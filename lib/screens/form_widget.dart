@@ -12,12 +12,45 @@ import 'package:presenta_un_amico/utilities/constants.dart';
 import 'package:provider/provider.dart';
 import 'components/button_file_scanner.dart';
 
-class FormWidget extends StatelessWidget {
+class FormWidget extends StatefulWidget {
   FormWidget({super.key});
+
+  @override
+  State<FormWidget> createState() => _FormWidgetState();
+}
+
+class _FormWidgetState extends State<FormWidget> {
+  final List<String> chips = [];
 
   //0: Name, 1: LastName, 2: Email, 3: Telefono, 4: Level, 5: FilePath, 6: FileName
   final List<TextEditingController> _fieldList =
       List.generate(7, (index) => TextEditingController());
+
+  void _addChips(String value) {
+    setState(() {
+      if (!chips.contains(value)) {
+        chips.add(value);
+        _generateChipsList();
+      }
+    });
+  }
+
+  List<Widget> _generateChipsList() {
+    List<Widget> list = [];
+    for (String i in chips) {
+      list.add(Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 2.0),
+          child: InputChip(
+            label: Text(i),
+            onDeleted: () {
+              setState(() {
+                chips.remove(i);
+              });
+            },
+          )));
+    }
+    return list;
+  }
 
   Future<void> submitValue(BuildContext context) async {
     for (var i in _fieldList) {
@@ -62,7 +95,7 @@ class FormWidget extends StatelessWidget {
       if (context.mounted) {
         FlutterGeneralServices.buildProgressIndicator(context);
       }
-
+      //TODO inserire anche chips per il candidato
       var conn = await MySQLServices.connectToMySQL();
       await MySQLServices.appendRowCandidates(
           conn,
@@ -166,6 +199,51 @@ class FormWidget extends StatelessWidget {
             controller: _fieldList[4],
             label: 'Grado di conoscenza',
             readOnly: false,
+          ),
+          //TODO refactor this widget
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 5.0),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(15.0),
+                      border: Border.all(
+                        width: 2.0,
+                        color: Colors.grey, // Colore del bordo
+                      ),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: DropdownButton<String>(
+                        onChanged: (String? value) {
+                          _addChips(value!);
+                        },
+                        isExpanded: true,
+                        hint: const Text(
+                          'Seleziona una o più tecnologie',
+                        ),
+                        underline: Container(),
+                        items: const [
+                          DropdownMenuItem(
+                            value: 'ciao',
+                            child: Text('ciao'),
+                          ),
+                          DropdownMenuItem(
+                            value: 'Hola',
+                            child: Text('Hola'),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Wrap(
+            children: _generateChipsList(),
           ),
           Row(
             children: [

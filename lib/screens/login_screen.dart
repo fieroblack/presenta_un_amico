@@ -58,6 +58,7 @@ class LoginScreen extends StatelessWidget {
                         if (context.mounted) {
                           FlutterGeneralServices.showSnackBar(
                               context, "Si è verificato un errore, riprova.");
+                          _pwd.clear();
                         }
                         return false;
                       }

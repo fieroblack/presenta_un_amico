@@ -30,7 +30,7 @@ class LogoTemplate extends StatelessWidget {
                   showDialog(
                     context: context,
                     builder: (BuildContext context) {
-                      return AccountSetting();
+                      return const AccountSetting();
                     },
                   );
                 },
@@ -70,7 +70,7 @@ class LogoTemplate extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 25.0),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: buildScreen(listWidget),
       ),
     );

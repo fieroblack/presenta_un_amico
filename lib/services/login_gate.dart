@@ -13,10 +13,8 @@ class LoginGate extends StatelessWidget {
     return Consumer<LoggedInUser>(
       builder: (context, auth, child) {
         if (auth.loggedIn) {
-          print('auth');
-          return MainPage();
+          return const MainPage();
         } else {
-          print('auth no');
           return LoginScreen();
         }
       },

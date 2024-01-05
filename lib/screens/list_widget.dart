@@ -80,8 +80,8 @@ class _ListWidgetCandidatesState extends State<ListWidgetCandidates> {
               ],
             );
           } else if (snapshot.data!.isEmpty) {
-            return LogoTemplate(
-              listWidget: const [
+            return const LogoTemplate(
+              listWidget: [
                 Expanded(
                   child: Center(
                     child: Text(

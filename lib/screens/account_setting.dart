@@ -18,7 +18,7 @@ class _AccountSettingState extends State<AccountSetting> {
 
   @override
   void initState() {
-    frame = Center(
+    frame = const Center(
       child: Text('prova'),
     );
     super.initState();
@@ -55,7 +55,7 @@ class _AccountSettingState extends State<AccountSetting> {
                           }
                         }
                         if (index == 0) {
-                          frame = Center(
+                          frame = const Center(
                             child: Center(
                               child: Text('prova'),
                             ),
