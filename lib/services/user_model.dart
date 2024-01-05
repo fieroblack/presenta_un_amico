@@ -1,16 +1,14 @@
-class LoggedInUser {
-  LoggedInUser(this._email, this._password);
+import 'package:flutter/material.dart';
 
-  final String _email;
+class LoggedInUser extends ChangeNotifier {
   String _name = '';
+  String _email = '';
   String _lastName = '';
-  final String _password;
   bool _loggedIn = false;
   bool _admin = false;
 
-  bool get loggedIn => _loggedIn;
   String get email => _email;
-  String get password => _password;
+  bool get loggedIn => _loggedIn;
   String get name => _name;
   String get lastName => _lastName;
   bool get admin => _admin;
@@ -19,9 +17,16 @@ class LoggedInUser {
     _name = map['Name'];
     _lastName = map['LastName'];
     _admin = map['Rule'];
+    _email = map['Email'];
   }
 
-  void setLoggedInOut() {
-    _loggedIn = !_loggedIn;
+  void logIn() {
+    _loggedIn = true;
+    notifyListeners();
+  }
+
+  void logOut() {
+    _loggedIn = false;
+    notifyListeners();
   }
 }

@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:presenta_un_amico/screens/login_screen.dart';
+import 'package:presenta_un_amico/services/login_gate.dart';
+import 'package:presenta_un_amico/services/user_model.dart';
 import 'package:presenta_un_amico/utilities/constants.dart';
+import 'package:provider/provider.dart';
 
 void main() async {
-  //new branch to switch in provider services
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => LoggedInUser(),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -20,7 +26,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: LogoColor.greenLogoColor),
         useMaterial3: true,
       ),
-      home: LoginScreen(),
+      home: LoginGate(),
     );
   }
 }

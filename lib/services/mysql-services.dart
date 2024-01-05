@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:typed_data';
 import 'package:crypto/crypto.dart';
 import 'package:mysql1/mysql1.dart';
-import 'package:presenta_un_amico/services/user_model.dart';
 
 class MySQLServices {
   static const String _host = 'db647.webme.it';
@@ -90,8 +89,9 @@ class MySQLServices {
     return byteList;
   }
 
-  static Future<Map<String, dynamic>> logIn(var conn, LoggedInUser user) async {
-    String query = "SELECT * FROM users where email='${user.email}'";
+  static Future<Map<String, dynamic>> logIn(
+      var conn, String email, String password) async {
+    String query = "SELECT * FROM users where email='$email'";
     Map<String, dynamic> results = {};
     dynamic datas = '';
     try {
@@ -99,12 +99,13 @@ class MySQLServices {
     } catch (e) {
       throw Exception('Error: $e');
     }
-    Uint8List data = Uint8List.fromList(utf8.encode(user.password));
+    Uint8List data = Uint8List.fromList(utf8.encode(password));
     String hashedPassword = sha256.convert(data).toString();
 
     if (datas.first['password'] == hashedPassword) {
       results['Name'] = datas.first['name'];
       results['LastName'] = datas.first['lastName'];
+      results['Email'] = datas.first['email'];
       if (datas.first['rule'] == 1) {
         results['Rule'] = true;
       } else {

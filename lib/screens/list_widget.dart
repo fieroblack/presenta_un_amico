@@ -3,13 +3,11 @@ import 'package:presenta_un_amico/screens/components/template_with_logo.dart';
 import 'package:presenta_un_amico/services/mysql-services.dart';
 import 'package:presenta_un_amico/services/user_model.dart';
 import 'package:presenta_un_amico/utilities/constants.dart';
+import 'package:provider/provider.dart';
 import 'components/custom_list_tile.dart';
 
 class ListWidgetCandidates extends StatefulWidget {
-  const ListWidgetCandidates({super.key, required LoggedInUser user})
-      : _user = user;
-
-  final LoggedInUser _user;
+  const ListWidgetCandidates({super.key});
 
   @override
   State<ListWidgetCandidates> createState() => _ListWidgetCandidatesState();
@@ -21,22 +19,25 @@ class _ListWidgetCandidatesState extends State<ListWidgetCandidates> {
   @override
   void initState() {
     super.initState();
-    _listFuture = _recoverDatas();
+    _listFuture = _recoverDatas(context);
   }
 
   Future<void> _refreshList() async {
     setState(() {
-      _listFuture = _recoverDatas();
+      _listFuture = _recoverDatas(context);
     });
   }
 
-  Future<List<Widget>> _recoverDatas() async {
+  Future<List<Widget>> _recoverDatas(BuildContext context) async {
     List<Widget> list = [];
     dynamic res;
+
     try {
       var conn = await MySQLServices.connectToMySQL();
-      if (!widget._user.admin) {
-        res = await MySQLServices.selectAll(conn, promoter: widget._user.email);
+      if (!Provider.of<LoggedInUser>(context, listen: false).admin) {
+        String promoter =
+            '${Provider.of<LoggedInUser>(context, listen: false).name} ${Provider.of<LoggedInUser>(context, listen: false).lastName}';
+        res = await MySQLServices.selectAll(conn, promoter: promoter);
       } else {
         res = await MySQLServices.selectAll(conn);
       }
@@ -48,7 +49,6 @@ class _ListWidgetCandidatesState extends State<ListWidgetCandidates> {
     for (var i in res) {
       list.add(
         CustomListTile(
-          user: widget._user,
           func: _refreshList,
           id: i['ID'],
           name: i['name'],
@@ -69,7 +69,6 @@ class _ListWidgetCandidatesState extends State<ListWidgetCandidates> {
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return LogoTemplate(
-              user: widget._user,
               listWidget: [
                 Expanded(
                   child: Center(
@@ -82,7 +81,6 @@ class _ListWidgetCandidatesState extends State<ListWidgetCandidates> {
             );
           } else if (snapshot.data!.isEmpty) {
             return LogoTemplate(
-              user: widget._user,
               listWidget: const [
                 Expanded(
                   child: Center(
@@ -95,7 +93,6 @@ class _ListWidgetCandidatesState extends State<ListWidgetCandidates> {
             );
           } else if (snapshot.hasError) {
             return LogoTemplate(
-              user: widget._user,
               listWidget: [
                 Center(
                   child: Text('Errore: ${snapshot.error}'),
@@ -105,7 +102,6 @@ class _ListWidgetCandidatesState extends State<ListWidgetCandidates> {
           } else {
             List<Widget> data = snapshot.data as List<Widget>;
             return LogoTemplate(
-              user: widget._user,
               listWidget: [
                 Expanded(
                   child: ListView(

@@ -1,8 +1,6 @@
 import 'package:action_slider/action_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:presenta_un_amico/services/user_model.dart';
 import '../../utilities/constants.dart';
-import '../main_page.dart';
 
 class SliderSubmit extends StatelessWidget {
   SliderSubmit({super.key, required String label, required Function() func})
@@ -29,21 +27,8 @@ class SliderSubmit extends StatelessWidget {
       action: (controller) async {
         controller.loading();
         await Future.delayed(const Duration(milliseconds: 500));
-        LoggedInUser user = await _func();
-        if (user.loggedIn) {
-          controller.success();
-          await Future.delayed(const Duration(seconds: 1));
-          if (context.mounted) {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (context) => MainPage(
-                  user: user,
-                ),
-              ),
-            );
-          }
-        } else {
+        bool result = await _func();
+        if (!result) {
           controller.failure();
           await Future.delayed(const Duration(seconds: 1));
           controller.reset();

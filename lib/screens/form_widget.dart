@@ -9,12 +9,12 @@ import 'package:presenta_un_amico/services/flutter_general_services.dart';
 import 'package:presenta_un_amico/services/mysql-services.dart';
 import 'package:presenta_un_amico/services/user_model.dart';
 import 'package:presenta_un_amico/utilities/constants.dart';
+import 'package:provider/provider.dart';
 import 'components/button_file_scanner.dart';
 
 class FormWidget extends StatelessWidget {
-  FormWidget({super.key, required LoggedInUser user}) : _user = user;
+  FormWidget({super.key});
 
-  final LoggedInUser _user;
   //0: Name, 1: LastName, 2: Email, 3: Telefono, 4: Level, 5: FilePath, 6: FileName
   final List<TextEditingController> _fieldList =
       List.generate(7, (index) => TextEditingController());
@@ -66,7 +66,7 @@ class FormWidget extends StatelessWidget {
       var conn = await MySQLServices.connectToMySQL();
       await MySQLServices.appendRowCandidates(
           conn,
-          _user.email,
+          '${Provider.of<LoggedInUser>(context, listen: false).name} ${Provider.of<LoggedInUser>(context, listen: false).lastName}',
           _fieldList[0].text,
           _fieldList[1].text,
           _fieldList[2].text,
@@ -100,18 +100,18 @@ class FormWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: LogoTemplate(
-        user: _user,
         listWidget: [
           Row(
             children: [
               Text(
-                '${_user.name} ${_user.lastName}',
+                '${Provider.of<LoggedInUser>(context).name} ${Provider.of<LoggedInUser>(context).lastName}',
                 style: kTitleStyle,
               ),
               const SizedBox(
                 width: 5.0,
               ),
-              if (_user.admin) const Icon(Icons.verified_user),
+              if (Provider.of<LoggedInUser>(context).admin)
+                const Icon(Icons.verified_user),
             ],
           ),
           const Text(

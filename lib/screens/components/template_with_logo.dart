@@ -1,18 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:presenta_un_amico/screens/login_screen.dart';
 import 'package:presenta_un_amico/screens/account_setting.dart';
 import 'package:presenta_un_amico/services/user_model.dart';
+import 'package:provider/provider.dart';
 
 class LogoTemplate extends StatelessWidget {
   const LogoTemplate({
     super.key,
-    required List<Widget> listWidget,
-    required LoggedInUser user,
-  })  : _user = user,
-        _listWidget = listWidget;
+    required this.listWidget,
+  });
 
-  final List<Widget> _listWidget;
-  final LoggedInUser _user;
+  final List<Widget> listWidget;
 
   List<Widget> buildScreen(List<Widget> list) {
     List<Widget> list = [];
@@ -33,9 +30,7 @@ class LogoTemplate extends StatelessWidget {
                   showDialog(
                     context: context,
                     builder: (BuildContext context) {
-                      return AccountSetting(
-                        user: _user,
-                      );
+                      return AccountSetting();
                     },
                   );
                 },
@@ -49,8 +44,7 @@ class LogoTemplate extends StatelessWidget {
               ),
               PopupMenuItem<String>(
                 onTap: () {
-                  Navigator.pushReplacement(context,
-                      MaterialPageRoute(builder: (context) => LoginScreen()));
+                  Provider.of<LoggedInUser>(context, listen: false).logOut();
                 },
                 child: const Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -66,7 +60,7 @@ class LogoTemplate extends StatelessWidget {
       ),
     );
 
-    list.addAll(_listWidget);
+    list.addAll(listWidget);
 
     return list;
   }
@@ -77,7 +71,7 @@ class LogoTemplate extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 25.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: buildScreen(_listWidget),
+        children: buildScreen(listWidget),
       ),
     );
   }

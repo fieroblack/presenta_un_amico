@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:presenta_un_amico/services/flutter_general_services.dart';
 import 'package:presenta_un_amico/services/mysql-services.dart';
 import 'package:presenta_un_amico/services/user_model.dart';
+import 'package:provider/provider.dart';
 import 'components/custom_email_pwd_input.dart';
 import 'components/slider_button.dart';
 
@@ -43,21 +44,24 @@ class LoginScreen extends StatelessWidget {
                   SliderSubmit(
                     label: 'Scorri per accedere',
                     func: () async {
-                      LoggedInUser user = LoggedInUser(_email.text, _pwd.text);
+                      LoggedInUser auth =
+                          Provider.of<LoggedInUser>(context, listen: false);
                       Map<String, dynamic> datas = {};
                       try {
                         var conn = await MySQLServices.connectToMySQL();
-                        datas = await MySQLServices.logIn(conn, user);
+                        datas = await MySQLServices.logIn(
+                            conn, _email.text, _pwd.text);
                         await MySQLServices.connectClose(conn);
-                        user.setParameter(datas);
-                        user.setLoggedInOut();
+                        auth.setParameter(datas);
+                        auth.logIn();
                       } catch (e) {
                         if (context.mounted) {
                           FlutterGeneralServices.showSnackBar(
                               context, "Si è verificato un errore, riprova.");
                         }
+                        return false;
                       }
-                      return user;
+                      return true;
                     },
                   ),
                   const SizedBox(

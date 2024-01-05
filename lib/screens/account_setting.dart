@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:presenta_un_amico/screens/components/add_new_user.dart';
-import 'package:presenta_un_amico/screens/components/manage_user.dart';
 import 'package:presenta_un_amico/services/user_model.dart';
+import 'package:provider/provider.dart';
 
 class AccountSetting extends StatefulWidget {
-  const AccountSetting({super.key, required LoggedInUser user}) : _user = user;
-
-  final LoggedInUser _user;
+  const AccountSetting({
+    super.key,
+  });
 
   @override
   State<AccountSetting> createState() => _AccountSettingState();
@@ -18,7 +18,9 @@ class _AccountSettingState extends State<AccountSetting> {
 
   @override
   void initState() {
-    frame = ManageUsers(user: widget._user);
+    frame = Center(
+      child: Text('prova'),
+    );
     super.initState();
   }
 
@@ -39,7 +41,8 @@ class _AccountSettingState extends State<AccountSetting> {
                     minWidth: 80.0,
                   ),
                   onPressed: (index) {
-                    if (!widget._user.admin) return;
+                    if (!Provider.of<LoggedInUser>(context, listen: false)
+                        .admin) return;
                     setState(
                       () {
                         for (int buttonIndex = 0;
@@ -53,8 +56,8 @@ class _AccountSettingState extends State<AccountSetting> {
                         }
                         if (index == 0) {
                           frame = Center(
-                            child: ManageUsers(
-                              user: widget._user,
+                            child: Center(
+                              child: Text('prova'),
                             ),
                           );
                         } else {
@@ -66,7 +69,7 @@ class _AccountSettingState extends State<AccountSetting> {
                   isSelected: isSelected,
                   children: [
                     const Text('Gestisci'),
-                    widget._user.admin
+                    Provider.of<LoggedInUser>(context).admin
                         ? const Text('Crea')
                         : const Icon(
                             Icons.lock,
