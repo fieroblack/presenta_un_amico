@@ -37,10 +37,11 @@ class MySQLServices {
       String email,
       String tel,
       String level,
+      String technologies,
       String file) async {
     String query =
-        "INSERT INTO candidates (promoter, name, lastName, email, tel, level, file, date) "
-        "VALUES ('$promoter', '$name', '$lastName', '$email', '$tel', '$level', '$file', '${DateTime.now()}')";
+        "INSERT INTO candidates (promoter, name, lastName, email, tel, level, technologies, file, date) "
+        "VALUES ('$promoter', '$name', '$lastName', '$email', '$tel', '$level', '$technologies', '$file', '${DateTime.now()}')";
     try {
       await conn.query(query);
     } catch (e) {
@@ -48,12 +49,23 @@ class MySQLServices {
     }
   }
 
+  static Future genericSelect(var conn, String table) async {
+    String query = "Select * from $table";
+
+    dynamic result;
+    try {
+      result = await conn.query(query);
+    } catch (e) {
+      throw Exception('Error: $e');
+    }
+    return result;
+  }
+
   static Future selectAll(var conn, {String? promoter}) async {
     String query =
-        "Select ID, name, lastName,date, promoter from candidates where promoter='$promoter' order by id";
+        "Select * from candidates where promoter='$promoter' order by id";
     if (promoter == null) {
-      query =
-          "Select ID, name, lastName,date, promoter from candidates order by id";
+      query = "Select * from candidates order by id";
     }
 
     dynamic result;

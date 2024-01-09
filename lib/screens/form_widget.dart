@@ -1,9 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:presenta_un_amico/screens/components/custom_text_input.dart';
+import 'package:presenta_un_amico/screens/components/select_level.dart';
 import 'package:presenta_un_amico/screens/components/template_with_logo.dart';
 import 'package:presenta_un_amico/services/flutter_general_services.dart';
 import 'package:presenta_un_amico/services/mysql-services.dart';
@@ -13,35 +13,62 @@ import 'package:provider/provider.dart';
 import 'components/button_file_scanner.dart';
 
 class FormWidget extends StatefulWidget {
-  FormWidget({super.key});
+  const FormWidget({super.key});
 
   @override
   State<FormWidget> createState() => _FormWidgetState();
 }
 
 class _FormWidgetState extends State<FormWidget> {
-  final List<String> chips = [];
+  final Map<String, String> chips = {};
 
   //0: Name, 1: LastName, 2: Email, 3: Telefono, 4: Level, 5: FilePath, 6: FileName
   final List<TextEditingController> _fieldList =
       List.generate(7, (index) => TextEditingController());
 
-  void _addChips(String value) {
+  // void _addChips(String value) {
+  //   setState(() {
+  //     if (!chips.contains(value)) {
+  //       chips.add(value);
+  //       _generateChipsList();
+  //     }
+  //   });
+  // }
+  void _addChips(String value, String seniority) {
     setState(() {
-      if (!chips.contains(value)) {
-        chips.add(value);
+      if (!chips.keys.contains(value)) {
+        chips[value] = seniority;
         _generateChipsList();
       }
     });
   }
 
+  Future<List<Widget>> _getTecFromDb() async {
+    List<DropdownMenuItem<String>> list = [];
+    dynamic result;
+    try {
+      var conn = await MySQLServices.connectToMySQL();
+      result = await MySQLServices.genericSelect(conn, 'technologies');
+      await MySQLServices.connectClose(conn);
+    } catch (e) {
+      throw Exception('Errore: $e');
+    }
+    for (var i in result) {
+      list.add(DropdownMenuItem(
+        child: Text(i['name']),
+        value: i['name'],
+      ));
+    }
+    return list;
+  }
+
   List<Widget> _generateChipsList() {
     List<Widget> list = [];
-    for (String i in chips) {
+    for (String i in chips.keys) {
       list.add(Padding(
           padding: const EdgeInsets.symmetric(horizontal: 2.0),
           child: InputChip(
-            label: Text(i),
+            label: Text('$i:${chips[i]}'),
             onDeleted: () {
               setState(() {
                 chips.remove(i);
@@ -60,6 +87,13 @@ class _FormWidgetState extends State<FormWidget> {
               context, 'Tutti i campi devono essere compilati');
           return;
         }
+      }
+    }
+    if (chips.isEmpty) {
+      if (context.mounted) {
+        FlutterGeneralServices.showSnackBar(
+            context, 'Selezionare almeno una tecnologia');
+        return;
       }
     }
     String base64EncodedData = '';
@@ -97,6 +131,8 @@ class _FormWidgetState extends State<FormWidget> {
       }
       //TODO inserire anche chips per il candidato
       var conn = await MySQLServices.connectToMySQL();
+      List<String> coppieChiaveValore =
+          chips.entries.map((entry) => '${entry.key}:${entry.value}').toList();
       await MySQLServices.appendRowCandidates(
           conn,
           '${Provider.of<LoggedInUser>(context, listen: false).name} ${Provider.of<LoggedInUser>(context, listen: false).lastName}',
@@ -105,17 +141,22 @@ class _FormWidgetState extends State<FormWidget> {
           _fieldList[2].text,
           _fieldList[3].text,
           _fieldList[4].text,
+          coppieChiaveValore.join(" | "),
           base64EncodedData);
       await MySQLServices.connectClose(conn);
 
       for (TextEditingController i in _fieldList) {
         i.clear();
       }
+      setState(() {
+        chips.clear();
+      });
 
       SystemChannels.textInput.invokeMethod('TextInput.hide');
 
       if (context.mounted) {
         Navigator.pop(context);
+        FlutterGeneralServices.showSnackBar(context, 'Caricamento effettuato');
       }
     } catch (e) {
       if (context.mounted) {
@@ -123,9 +164,6 @@ class _FormWidgetState extends State<FormWidget> {
         FlutterGeneralServices.showSnackBar(
             context, 'Errore in fase di caricamento');
       }
-    }
-    if (context.mounted) {
-      FlutterGeneralServices.showSnackBar(context, 'Caricamento effettuato');
     }
   }
 
@@ -216,25 +254,52 @@ class _FormWidgetState extends State<FormWidget> {
                     ),
                     child: Padding(
                       padding: const EdgeInsets.all(10.0),
-                      child: DropdownButton<String>(
-                        onChanged: (String? value) {
-                          _addChips(value!);
+                      child: FutureBuilder(
+                        future: _getTecFromDb(),
+                        builder: (BuildContext context,
+                            AsyncSnapshot<dynamic> snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return Center(
+                              child: CircularProgressIndicator(
+                                color: LogoColor.greenLogoColor,
+                              ),
+                            );
+                          } else if (snapshot.data!.isEmpty) {
+                            return const Center(
+                                child: Text(
+                              'Elenco vuoto',
+                            ));
+                          } else if (snapshot.hasError) {
+                            return Center(
+                              child: Text('Errore: ${snapshot.error}'),
+                            );
+                          } else {
+                            List<DropdownMenuItem<String>> data =
+                                snapshot.data as List<DropdownMenuItem<String>>;
+                            return DropdownButton<String>(
+                              onChanged: (String? value) async {
+                                String seniority = await showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return SelectGrade();
+                                    });
+                                _addChips(value!, seniority);
+                              },
+                              isExpanded: true,
+                              hint: Text(
+                                chips.isEmpty
+                                    ? 'Seleziona una o più tecnologie'
+                                    : '${chips.keys.length} element${chips.keys.length > 1 ? 'i' : 'o'} selezionat${chips.keys.length > 1 ? 'i' : 'o'}',
+                                style: chips.keys.isEmpty
+                                    ? null
+                                    : kUserPwdTextStyle,
+                              ),
+                              underline: Container(),
+                              items: data,
+                            );
+                          }
                         },
-                        isExpanded: true,
-                        hint: const Text(
-                          'Seleziona una o più tecnologie',
-                        ),
-                        underline: Container(),
-                        items: const [
-                          DropdownMenuItem(
-                            value: 'ciao',
-                            child: Text('ciao'),
-                          ),
-                          DropdownMenuItem(
-                            value: 'Hola',
-                            child: Text('Hola'),
-                          ),
-                        ],
                       ),
                     ),
                   ),

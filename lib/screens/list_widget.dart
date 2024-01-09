@@ -55,6 +55,7 @@ class _ListWidgetCandidatesState extends State<ListWidgetCandidates> {
           lastName: i['lastName'],
           date: i['date'],
           promoter: i['promoter'],
+          skills: i['technologies'],
         ),
       );
     }

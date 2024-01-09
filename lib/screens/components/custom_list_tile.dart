@@ -15,7 +15,9 @@ class CustomListTile extends StatelessWidget {
     required DateTime date,
     required dynamic Function() func,
     required String promoter,
-  })  : _promoter = promoter,
+    required String skills,
+  })  : _skills = skills,
+        _promoter = promoter,
         _func = func,
         _date = date,
         _lastName = lastName,
@@ -28,6 +30,7 @@ class CustomListTile extends StatelessWidget {
   final DateTime _date;
   final Function() _func;
   final String _promoter;
+  final String _skills;
 
   Future<void> _deleteRecord(int id) async {
     var conn = await MySQLServices.connectToMySQL();
@@ -75,6 +78,7 @@ class CustomListTile extends StatelessWidget {
           color: LogoColor.greenComponentColor,
         ),
         child: Row(
+          mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Column(
@@ -95,7 +99,7 @@ class CustomListTile extends StatelessWidget {
               Icons.file_open,
               size: 40,
               color: Colors.grey,
-            )
+            ),
           ],
         ),
       ),

@@ -15,7 +15,7 @@ class _MainPageState extends State<MainPage> {
   late Widget _bodyWidget;
   @override
   void initState() {
-    _bodyWidget = FormWidget();
+    _bodyWidget = const FormWidget();
     super.initState();
   }
 
@@ -24,13 +24,13 @@ class _MainPageState extends State<MainPage> {
       _selectedIndex = index;
       switch (index) {
         case 0:
-          _bodyWidget = FormWidget();
+          _bodyWidget = const FormWidget();
           break;
         case 1:
           _bodyWidget = const ListWidgetCandidates();
           break;
         default:
-          _bodyWidget = FormWidget();
+          _bodyWidget = const FormWidget();
           break;
       }
     });
