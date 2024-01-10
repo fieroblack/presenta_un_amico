@@ -22,18 +22,12 @@ class FormWidget extends StatefulWidget {
 class _FormWidgetState extends State<FormWidget> {
   final Map<String, String> chips = {};
 
-  //0: Name, 1: LastName, 2: Email, 3: Telefono, 4: Level, 5: FilePath, 6: FileName
+  //0: Name, 1: LastName, 2: Email, 3: Telefono, 4: FilePath, 5: FileName
   final List<TextEditingController> _fieldList =
-      List.generate(7, (index) => TextEditingController());
+      List.generate(6, (index) => TextEditingController());
 
-  // void _addChips(String value) {
-  //   setState(() {
-  //     if (!chips.contains(value)) {
-  //       chips.add(value);
-  //       _generateChipsList();
-  //     }
-  //   });
-  // }
+  String _relationLevel = '';
+
   void _addChips(String value, String seniority) {
     setState(() {
       if (!chips.keys.contains(value)) {
@@ -96,9 +90,16 @@ class _FormWidgetState extends State<FormWidget> {
         return;
       }
     }
+    if (_relationLevel == '') {
+      if (context.mounted) {
+        FlutterGeneralServices.showSnackBar(
+            context, 'Selezionare il grado di conoscenza');
+        return;
+      }
+    }
     String base64EncodedData = '';
     try {
-      File file = File(_fieldList[5].text);
+      File file = File(_fieldList[4].text);
 
       List<int> fileBytes = await file.readAsBytes();
       base64EncodedData = base64Encode(fileBytes);
@@ -140,7 +141,7 @@ class _FormWidgetState extends State<FormWidget> {
           _fieldList[1].text,
           _fieldList[2].text,
           _fieldList[3].text,
-          _fieldList[4].text,
+          _relationLevel,
           coppieChiaveValore.join(" | "),
           base64EncodedData);
       await MySQLServices.connectClose(conn);
@@ -231,13 +232,41 @@ class _FormWidgetState extends State<FormWidget> {
             label: 'Telefono',
             readOnly: false,
           ),
-          CustomTextInput(
-            kType: TextInputType.text,
-            textCapitalization: true,
-            controller: _fieldList[4],
-            label: 'Grado di conoscenza',
-            readOnly: false,
+          Padding(
+            padding: const EdgeInsets.only(bottom: 5.0),
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(15.0),
+                border: Border.all(
+                  width: 2.0,
+                  color: Colors.grey, // Colore del bordo
+                ),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: DropdownButton<String>(
+                  onChanged: (String? value) {
+                    setState(() {
+                      _relationLevel = value!;
+                    });
+                  },
+                  isExpanded: true,
+                  hint: Text(
+                    _relationLevel == ''
+                        ? 'Seleziona il grado di conoscenza'
+                        : _relationLevel,
+                    style: _relationLevel == '' ? null : kUserPwdTextStyle,
+                  ),
+                  underline: Container(),
+                  items: [
+                    DropdownMenuItem(child: Text('Amico'), value: 'Amico'),
+                    DropdownMenuItem(child: Text('Cugina'), value: 'Cugina'),
+                  ],
+                ),
+              ),
+            ),
           ),
+
           //TODO refactor this widget
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 5.0),
@@ -316,13 +345,13 @@ class _FormWidgetState extends State<FormWidget> {
                 child: CustomTextInput(
                   kType: TextInputType.none,
                   textCapitalization: true,
-                  controller: _fieldList[6],
+                  controller: _fieldList[5],
                   label: 'File da allegare',
                   readOnly: true,
                 ),
               ),
               ButtonFileScanner(
-                controller: [_fieldList[5], _fieldList[6]],
+                controller: [_fieldList[4], _fieldList[5]],
               ),
             ],
           ),
