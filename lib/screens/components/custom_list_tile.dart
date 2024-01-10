@@ -38,6 +38,21 @@ class CustomListTile extends StatelessWidget {
     await MySQLServices.connectClose(conn);
   }
 
+  List<Widget> _skillsListWidget() {
+    List<Widget> list = [];
+
+    for (String skill in _skills.split("|")) {
+      list.add(
+        Text(
+          '${skill.split(":")[0]} |',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+      );
+    }
+
+    return list;
+  }
+
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -51,6 +66,7 @@ class CustomListTile extends StatelessWidget {
                 id: _id,
                 name: _name,
                 lastName: _lastName,
+                skills: _skills,
               );
             });
       },
@@ -77,29 +93,56 @@ class CustomListTile extends StatelessWidget {
           borderRadius: BorderRadius.circular(15.0),
           color: LogoColor.greenComponentColor,
         ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  '${_id.toString()} $_name $_lastName',
+                  '[${_id.toString()}] $_name $_lastName',
                   style: kLabelStyle,
                 ),
-                Text(
-                  'Data inserimento: ${_date.day}/${_date.month}/${_date.year}',
-                ),
-                if (Provider.of<LoggedInUser>(context).admin)
-                  Text('Inserito da: $_promoter'),
+                Icon(Icons.attach_file)
               ],
             ),
-            const Icon(
-              Icons.file_open,
-              size: 40,
-              color: Colors.grey,
+            Divider(),
+            Wrap(
+              children: _skillsListWidget(),
             ),
+            Text(
+              'Data inserimento: ${_date.day}/${_date.month}/${_date.year}',
+            ),
+            if (Provider.of<LoggedInUser>(context).admin)
+              Text('Promoter: $_promoter'),
+            SizedBox(
+              height: 20.0,
+            ),
+            false
+                ? const Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Icon(
+                        Icons.fiber_manual_record,
+                        color: Colors.grey,
+                      ),
+                      Text('In progress'),
+                      Icon(
+                        Icons.fiber_manual_record,
+                        color: Colors.grey,
+                      ),
+                      Text('In progress'),
+                      Icon(
+                        Icons.fiber_manual_record,
+                        color: Colors.grey,
+                      ),
+                      Text('In progress'),
+                    ],
+                  )
+                : Text(
+                    'Iter non ancora attivo',
+                    style: TextStyle(color: Colors.red),
+                  )
           ],
         ),
       ),

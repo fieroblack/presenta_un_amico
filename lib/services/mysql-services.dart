@@ -138,6 +138,16 @@ class MySQLServices {
     }
   }
 
+  static Future<void> appendRowIter(var conn, String id) async {
+    String query = "INSERT INTO iter (id) "
+        "VALUES ('$id')";
+    try {
+      await conn.query(query);
+    } catch (e) {
+      throw Exception('Error: $e');
+    }
+  }
+
   static Future selectAllUsers(var conn, {String? email}) async {
     String query = "Select email from users where email='$email'";
     if (email == null) {

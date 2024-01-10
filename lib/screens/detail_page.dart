@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:presenta_un_amico/services/mysql-services.dart';
+
 import 'package:presenta_un_amico/utilities/constants.dart';
+
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
 class DetailPage extends StatelessWidget {
@@ -9,8 +11,10 @@ class DetailPage extends StatelessWidget {
       required int id,
       required String name,
       required String lastName,
-      required DateTime date})
-      : _date = date,
+      required DateTime date,
+      required String skills})
+      : _skills = skills,
+        _date = date,
         _lastName = lastName,
         _name = name,
         _id = id;
@@ -19,6 +23,7 @@ class DetailPage extends StatelessWidget {
   final String _name;
   final String _lastName;
   final DateTime _date;
+  final String _skills;
 
   Future<List<Widget>> _recoverData() async {
     List<Widget> list = [];
@@ -30,6 +35,25 @@ class DetailPage extends StatelessWidget {
     } catch (e) {
       throw Exception('Error: $e');
     }
+    return list;
+  }
+
+  List<Widget> _skillsListWidget() {
+    List<Widget> list = [];
+
+    for (String skill in _skills.split("|")) {
+      list.add(
+        Padding(
+          padding: const EdgeInsets.all(5.0),
+          child: Text(
+            '${skill.split(":")[0]} : ${skill.split(":")[1]}',
+            style: TextStyle(fontWeight: FontWeight.bold),
+            textAlign: TextAlign.center,
+          ),
+        ),
+      );
+    }
+
     return list;
   }
 
@@ -86,13 +110,18 @@ class DetailPage extends StatelessWidget {
                     )
                   ],
                 ),
+                Wrap(
+                  alignment: WrapAlignment.center,
+                  children: _skillsListWidget(),
+                ),
                 Text(
                   'Data inserimento: ${_date.day}/${_date.month}/${_date.year}',
                   textAlign: TextAlign.center,
                 ),
-                Flexible(
+                Expanded(
                   child: Padding(
-                    padding: const EdgeInsets.all(25.0),
+                    padding: const EdgeInsets.all(15.0),
+//child: SfPdfViewer.asset('assets/pdf/prova.pdf'),
                     child: data[0],
                   ),
                 ),
@@ -104,47 +133,3 @@ class DetailPage extends StatelessWidget {
     );
   }
 }
-
-//
-// Dialog(
-// child: Container(
-// child: Column(
-// mainAxisAlignment: MainAxisAlignment.center,
-// crossAxisAlignment: CrossAxisAlignment.stretch,
-// children: [
-// Text(
-// 'Id: ${_id.toString()}',
-// style: kTitleStyle,
-// textAlign: TextAlign.center,
-// ),
-// Row(
-// mainAxisAlignment: MainAxisAlignment.center,
-// children: [
-// Text(
-// _name.toString(),
-// style: kTitleStyle,
-// ),
-// const SizedBox(
-// width: 10.0,
-// ),
-// Text(
-// _lastName.toString(),
-// style: kTitleStyle,
-// )
-// ],
-// ),
-// Text(
-// 'Data inserimento: ${_date.day}/${_date.month}/${_date.year}',
-// textAlign: TextAlign.center,
-// ),
-// Expanded(
-// child: Padding(
-// padding: const EdgeInsets.all(15.0),
-// //child: SfPdfViewer.asset('assets/pdf/prova.pdf'),
-// child: SfPdfViewer.memory(bytes),
-// ),
-// ),
-// ],
-// ),
-// ),
-// );
