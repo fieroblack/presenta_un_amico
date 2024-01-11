@@ -258,9 +258,19 @@ class _FormWidgetState extends State<FormWidget> {
                     style: _relationLevel == '' ? null : kUserPwdTextStyle,
                   ),
                   underline: Container(),
-                  items: [
-                    DropdownMenuItem(child: Text('Amico'), value: 'Amico'),
-                    DropdownMenuItem(child: Text('Cugina'), value: 'Cugina'),
+                  items: const [
+                    DropdownMenuItem(
+                      value: 'Amico',
+                      child: Text('Amico'),
+                    ),
+                    DropdownMenuItem(
+                      value: 'Parente',
+                      child: Text('Parente'),
+                    ),
+                    DropdownMenuItem(
+                      value: 'Ex collega',
+                      child: Text('Ex collega'),
+                    ),
                   ],
                 ),
               ),
