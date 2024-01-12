@@ -32,6 +32,46 @@ class CustomListTile extends StatelessWidget {
   final String _promoter;
   final String _skills;
 
+  Future<Widget> _futureDatas() async {
+    dynamic result = '';
+    try {
+      var conn = await MySQLServices.connectToMySQL();
+      result = await MySQLServices.genericSelect(conn, 'iter',
+          param: "id_candidatura='$_id'");
+      await MySQLServices.connectClose(conn);
+    } catch (e) {
+      throw Exception('Error: $e');
+    }
+    switch (result.first['status']) {
+      case 'closed':
+        return Text('Iter non ancora attivo');
+      case 'inProgress':
+        List<Color> sem = [Colors.grey, Colors.grey, Colors.grey];
+        if (result.first['data_1_step'] != null) {
+          sem = [Colors.orange, Colors.grey, Colors.grey];
+        }
+        if (result.first['data_2_step'] != null) {
+          sem = [Colors.green, Colors.orange, Colors.grey];
+        }
+        if (result.first['data_3_step'] != null) {
+          sem = [Colors.green, Colors.green, Colors.orange];
+        }
+        return Row(
+          children: [
+            Icon(Icons.fiber_manual_record, size: 30.0, color: sem[0]),
+            Icon(Icons.fiber_manual_record, size: 30.0, color: sem[1]),
+            Icon(Icons.fiber_manual_record, size: 30.0, color: sem[2]),
+          ],
+        );
+      case 'failed':
+        return Text('Iter fallito', style: TextStyle(color: Colors.red));
+      case 'success':
+        return Text('Proposta inviata', style: TextStyle(color: Colors.green));
+      default:
+        return Text('Non è stato possibile caricare i dati');
+    }
+  }
+
   Future<void> _deleteRecord(int id) async {
     var conn = await MySQLServices.connectToMySQL();
     await MySQLServices.deleteByKey(conn, id);
@@ -62,6 +102,7 @@ class CustomListTile extends StatelessWidget {
             context: context,
             builder: (BuildContext context) {
               return DetailPage(
+                func: _func,
                 date: _date,
                 id: _id,
                 name: _name,
@@ -116,33 +157,18 @@ class CustomListTile extends StatelessWidget {
             if (Provider.of<LoggedInUser>(context).admin)
               Text('Promoter: $_promoter'),
             SizedBox(
-              height: 20.0,
+              height: 10.0,
             ),
-            false
-                ? const Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Icon(
-                        Icons.fiber_manual_record,
-                        color: Colors.grey,
-                      ),
-                      Text('In progress'),
-                      Icon(
-                        Icons.fiber_manual_record,
-                        color: Colors.grey,
-                      ),
-                      Text('In progress'),
-                      Icon(
-                        Icons.fiber_manual_record,
-                        color: Colors.grey,
-                      ),
-                      Text('In progress'),
-                    ],
-                  )
-                : Text(
-                    'Iter non ancora attivo',
-                    style: TextStyle(color: Colors.red),
-                  )
+            FutureBuilder(
+              future: _futureDatas(),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return snapshot.data!;
+                } else {
+                  return Text('Non ho dati a sufficienza');
+                }
+              },
+            )
           ],
         ),
       ),

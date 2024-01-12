@@ -43,14 +43,20 @@ class MySQLServices {
         "INSERT INTO candidates (promoter, name, lastName, email, tel, level, technologies, file, date) "
         "VALUES ('$promoter', '$name', '$lastName', '$email', '$tel', '$level', '$technologies', '$file', '${DateTime.now()}')";
     try {
+      var res = await conn.query(query);
+      query =
+          "INSERT INTO iter (id_candidatura, status) VALUES ('${res.insertId!}', 'closed')";
       await conn.query(query);
     } catch (e) {
       throw Exception('Error: $e');
     }
   }
 
-  static Future genericSelect(var conn, String table) async {
+  static Future genericSelect(var conn, String table, {String? param}) async {
     String query = "Select * from $table";
+    if (param != null) {
+      query = '$query where $param';
+    }
 
     dynamic result;
     try {
@@ -148,18 +154,13 @@ class MySQLServices {
     }
   }
 
-  static Future selectAllUsers(var conn, {String? email}) async {
-    String query = "Select email from users where email='$email'";
-    if (email == null) {
-      query = "Select email from users";
-    }
-
-    dynamic result;
+  static Future<void> activateIter(var conn, String id) async {
+    String query =
+        "UPDATE iter SET status='inProgress', data_apertura='${DateTime.now()}' where id_candidatura='$id'";
     try {
-      result = await conn.query(query);
+      await conn.query(query);
     } catch (e) {
       throw Exception('Error: $e');
     }
-    return result;
   }
 }

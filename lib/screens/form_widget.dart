@@ -151,6 +151,7 @@ class _FormWidgetState extends State<FormWidget> {
       }
       setState(() {
         chips.clear();
+        _relationLevel = '';
       });
 
       SystemChannels.textInput.invokeMethod('TextInput.hide');
