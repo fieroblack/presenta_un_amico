@@ -48,10 +48,9 @@ class LoginScreen extends StatelessWidget {
                           Provider.of<LoggedInUser>(context, listen: false);
                       Map<String, dynamic> datas = {};
                       try {
-                        var conn = await MySQLServices.connectToMySQL();
-                        datas = await MySQLServices.logIn(
-                            conn, _email.text, _pwd.text);
-                        await MySQLServices.connectClose(conn);
+                        datas =
+                            await MySQLServices.logIn(_email.text, _pwd.text);
+
                         auth.setParameter(datas);
                         auth.logIn();
                       } catch (e) {

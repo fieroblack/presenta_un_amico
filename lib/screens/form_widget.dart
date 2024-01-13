@@ -41,9 +41,7 @@ class _FormWidgetState extends State<FormWidget> {
     List<DropdownMenuItem<String>> list = [];
     dynamic result;
     try {
-      var conn = await MySQLServices.connectToMySQL();
-      result = await MySQLServices.genericSelect(conn, 'technologies');
-      await MySQLServices.connectClose(conn);
+      result = await MySQLServices.genericSelect('technologies');
     } catch (e) {
       throw Exception('Errore: $e');
     }
@@ -131,11 +129,10 @@ class _FormWidgetState extends State<FormWidget> {
         FlutterGeneralServices.buildProgressIndicator(context);
       }
       //TODO inserire anche chips per il candidato
-      var conn = await MySQLServices.connectToMySQL();
+
       List<String> coppieChiaveValore =
           chips.entries.map((entry) => '${entry.key}:${entry.value}').toList();
       await MySQLServices.appendRowCandidates(
-          conn,
           '${Provider.of<LoggedInUser>(context, listen: false).name} ${Provider.of<LoggedInUser>(context, listen: false).lastName}',
           _fieldList[0].text,
           _fieldList[1].text,
@@ -144,7 +141,6 @@ class _FormWidgetState extends State<FormWidget> {
           _relationLevel,
           coppieChiaveValore.join(" | "),
           base64EncodedData);
-      await MySQLServices.connectClose(conn);
 
       for (TextEditingController i in _fieldList) {
         i.clear();
@@ -198,6 +194,7 @@ class _FormWidgetState extends State<FormWidget> {
             children: [
               Flexible(
                 child: CustomTextInput(
+                  maxCharacter: 20,
                   kType: TextInputType.text,
                   textCapitalization: true,
                   controller: _fieldList[0],
@@ -210,6 +207,7 @@ class _FormWidgetState extends State<FormWidget> {
               ),
               Flexible(
                 child: CustomTextInput(
+                  maxCharacter: 20,
                   kType: TextInputType.text,
                   textCapitalization: true,
                   controller: _fieldList[1],
@@ -220,6 +218,7 @@ class _FormWidgetState extends State<FormWidget> {
             ],
           ),
           CustomTextInput(
+            maxCharacter: 55,
             kType: TextInputType.emailAddress,
             textCapitalization: false,
             controller: _fieldList[2],
@@ -227,6 +226,7 @@ class _FormWidgetState extends State<FormWidget> {
             readOnly: false,
           ),
           CustomTextInput(
+            maxCharacter: 15,
             kType: TextInputType.phone,
             textCapitalization: false,
             controller: _fieldList[3],
@@ -354,6 +354,7 @@ class _FormWidgetState extends State<FormWidget> {
             children: [
               Flexible(
                 child: CustomTextInput(
+                  maxCharacter: 55,
                   kType: TextInputType.none,
                   textCapitalization: true,
                   controller: _fieldList[5],

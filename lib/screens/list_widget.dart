@@ -33,16 +33,13 @@ class _ListWidgetCandidatesState extends State<ListWidgetCandidates> {
     dynamic res;
 
     try {
-      var conn = await MySQLServices.connectToMySQL();
       if (!Provider.of<LoggedInUser>(context, listen: false).admin) {
         String promoter =
             '${Provider.of<LoggedInUser>(context, listen: false).name} ${Provider.of<LoggedInUser>(context, listen: false).lastName}';
-        res = await MySQLServices.selectAll(conn, promoter: promoter);
+        res = await MySQLServices.selectAll(promoter: promoter);
       } else {
-        res = await MySQLServices.selectAll(conn);
+        res = await MySQLServices.selectAll();
       }
-
-      await MySQLServices.connectClose(conn);
     } catch (e) {
       throw Exception("Cannot upload the list $e");
     }

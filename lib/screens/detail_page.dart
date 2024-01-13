@@ -34,9 +34,8 @@ class DetailPage extends StatelessWidget {
   Future<List<Widget>> _recoverData() async {
     List<Widget> list = [];
     try {
-      var conn = await MySQLServices.connectToMySQL();
-      var datas = await MySQLServices.readPdfFile(conn, _id);
-      await MySQLServices.connectClose(conn);
+      var datas = await MySQLServices.readPdfFile(_id);
+
       list.add(SfPdfViewer.memory(datas));
     } catch (e) {
       throw Exception('Error: $e');

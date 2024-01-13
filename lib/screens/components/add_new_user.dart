@@ -37,15 +37,12 @@ class _AddNewUserFrameState extends State<AddNewUserFrame> {
     Uint8List data = Uint8List.fromList(utf8.encode(_fieldController[3].text));
     String hashedPassword = sha256.convert(data).toString();
     try {
-      var conn = await MySQLServices.connectToMySQL();
       await MySQLServices.appendRowUsers(
-          conn,
           _fieldController[0].text,
           _fieldController[1].text,
           _fieldController[2].text,
           hashedPassword,
           _value ? 1 : 0);
-      await MySQLServices.connectClose(conn);
     } catch (e) {
       if (context.mounted) {
         Navigator.pop(context);
@@ -67,18 +64,21 @@ class _AddNewUserFrameState extends State<AddNewUserFrame> {
       mainAxisSize: MainAxisSize.min,
       children: [
         CustomTextInput(
+            maxCharacter: 20,
             label: 'Nome',
             readOnly: false,
             controller: _fieldController[0],
             textCapitalization: true,
             kType: TextInputType.text),
         CustomTextInput(
+            maxCharacter: 20,
             label: 'Cognome',
             readOnly: false,
             controller: _fieldController[1],
             textCapitalization: true,
             kType: TextInputType.text),
         CustomTextInput(
+            maxCharacter: 55,
             label: 'Email',
             readOnly: false,
             controller: _fieldController[2],

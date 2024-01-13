@@ -35,10 +35,8 @@ class CustomListTile extends StatelessWidget {
   Future<Widget> _futureDatas() async {
     dynamic result = '';
     try {
-      var conn = await MySQLServices.connectToMySQL();
-      result = await MySQLServices.genericSelect(conn, 'iter',
+      result = await MySQLServices.genericSelect('iter',
           param: "id_candidatura='$_id'");
-      await MySQLServices.connectClose(conn);
     } catch (e) {
       throw Exception('Error: $e');
     }
@@ -47,35 +45,58 @@ class CustomListTile extends StatelessWidget {
         return Text('Iter non ancora attivo');
       case 'inProgress':
         List<Color> sem = [Colors.grey, Colors.grey, Colors.grey];
-        if (result.first['data_1_step'] != null) {
-          sem = [Colors.orange, Colors.grey, Colors.grey];
+        if (result.first['note_1_step'] != null &&
+            result.first['note_1_step'].toString() != '') {
+          sem[0] = Colors.orange;
         }
-        if (result.first['data_2_step'] != null) {
-          sem = [Colors.green, Colors.orange, Colors.grey];
+        if (result.first['note_2_step'] != null &&
+            result.first['note_2_step'].toString() != '') {
+          sem[1] = Colors.orange;
         }
-        if (result.first['data_3_step'] != null) {
-          sem = [Colors.green, Colors.green, Colors.orange];
+        if (result.first['note_3_step'] != null &&
+            result.first['note_3_step'].toString() != '') {
+          sem[2] = Colors.orange;
         }
         return Row(
           children: [
             Icon(Icons.fiber_manual_record, size: 30.0, color: sem[0]),
             Icon(Icons.fiber_manual_record, size: 30.0, color: sem[1]),
             Icon(Icons.fiber_manual_record, size: 30.0, color: sem[2]),
+            Expanded(child: Container()),
+            Text('Iter in corso', style: TextStyle(color: Colors.orange)),
           ],
         );
       case 'failed':
-        return Text('Iter fallito', style: TextStyle(color: Colors.red));
+        return Row(
+          children: [
+            Icon(Icons.fiber_manual_record, size: 30.0, color: Colors.red),
+            Icon(Icons.fiber_manual_record, size: 30.0, color: Colors.red),
+            Icon(Icons.fiber_manual_record, size: 30.0, color: Colors.red),
+            Expanded(child: Container()),
+            Text('Iter fallito', style: TextStyle(color: Colors.red)),
+          ],
+        );
       case 'success':
-        return Text('Proposta inviata', style: TextStyle(color: Colors.green));
+        return Row(
+          children: [
+            Icon(Icons.fiber_manual_record, size: 30.0, color: Colors.green),
+            Icon(Icons.fiber_manual_record, size: 30.0, color: Colors.green),
+            Icon(Icons.fiber_manual_record, size: 30.0, color: Colors.green),
+            Expanded(child: Container()),
+            Text('Proposta inviata', style: TextStyle(color: Colors.green)),
+          ],
+        );
       default:
         return Text('Non è stato possibile caricare i dati');
     }
   }
 
   Future<void> _deleteRecord(int id) async {
-    var conn = await MySQLServices.connectToMySQL();
-    await MySQLServices.deleteByKey(conn, id);
-    await MySQLServices.connectClose(conn);
+    try {
+      await MySQLServices.deleteByKey(id);
+    } catch (e) {
+      throw Exception("Error: $e");
+    }
   }
 
   List<Widget> _skillsListWidget() {

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../../utilities/constants.dart';
 
@@ -9,8 +10,10 @@ class CustomTextInput extends StatelessWidget {
       required bool readOnly,
       required TextEditingController controller,
       required bool textCapitalization,
-      required TextInputType kType})
-      : _kType = kType,
+      required TextInputType kType,
+      required int maxCharacter})
+      : _maxCharacter = maxCharacter,
+        _kType = kType,
         _textCapitalization = textCapitalization,
         _controller = controller,
         _readOnly = readOnly,
@@ -21,12 +24,17 @@ class CustomTextInput extends StatelessWidget {
   final TextEditingController _controller;
   final bool _textCapitalization;
   final TextInputType _kType;
+  final int _maxCharacter;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 0.0, vertical: 10.0),
+      padding: const EdgeInsets.symmetric(horizontal: 0.0, vertical: 5.0),
       child: TextField(
+        minLines: 1,
+        maxLines: null,
+        maxLength: _maxCharacter,
+        scrollPadding: EdgeInsets.all(20.0),
         keyboardType: _kType,
         controller: _controller,
         enabled: !_readOnly,
