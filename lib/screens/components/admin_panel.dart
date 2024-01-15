@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:presenta_un_amico/screens/components/custom_text_input.dart';
+import 'package:presenta_un_amico/screens/failed_or_success_screen.dart';
 import 'package:presenta_un_amico/services/flutter_general_services.dart';
 
 import 'package:presenta_un_amico/services/mysql-services.dart';
 
 import '../../utilities/constants.dart';
+import 'info_interview_tab.dart';
 
 class AdminPanel extends StatefulWidget {
   const AdminPanel({super.key, required int id}) : _id = id;
@@ -29,8 +31,24 @@ class _AdminPanelState extends State<AdminPanel> {
     }
   }
 
+  Future<void> _updateIterProcess(String field, String value) async {
+    try {
+      SystemChannels.textInput.invokeMethod('TextInput.hide');
+
+      await MySQLServices.manageIter("$field='$value'", widget._id.toString());
+
+      FlutterGeneralServices.showSnackBar(
+          context, 'Modifica avvenuta con successo');
+    } catch (e) {
+      FlutterGeneralServices.showSnackBar(
+          context, 'Si è verificato un problema');
+      throw Exception("Error: $e");
+    }
+  }
+
   Future<void> _endSuccessProcess(bool success) async {
     String parameter = "";
+
     if (success) {
       parameter = "status='success'";
     } else {
@@ -70,11 +88,10 @@ class _AdminPanelState extends State<AdminPanel> {
                 activeTrackColor: LogoColor.greenLogoColor,
                 value: _activate,
                 onChanged: (bool? value) async {
+                  await _activateIter();
                   setState(() {
                     _activate = !_activate;
                   });
-
-                  await _activateIter();
                 })
           ],
         );
@@ -88,13 +105,13 @@ class _AdminPanelState extends State<AdminPanel> {
                 id: widget._id.toString(),
                 label: 'Colloquio conoscitivo',
               ),
-              SizedBox(height: 15.0),
+              SizedBox(height: 10.0),
               info_interview_tab(
                 stepNumber: 2,
                 id: widget._id.toString(),
                 label: 'Colloquio tecnico',
               ),
-              SizedBox(height: 15.0),
+              SizedBox(height: 10.0),
               info_interview_tab(
                 stepNumber: 3,
                 id: widget._id.toString(),
@@ -110,10 +127,43 @@ class _AdminPanelState extends State<AdminPanel> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.red,
                     ),
-                    onPressed: () {
-                      setState(() {
-                        _endSuccessProcess(false);
-                      });
+                    onPressed: () async {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          TextEditingController controller =
+                              TextEditingController();
+                          return AlertDialog(
+                            content: CustomTextInput(
+                              label: 'Giudizio finale',
+                              readOnly: false,
+                              controller: controller,
+                              textCapitalization: true,
+                              kType: TextInputType.text,
+                              maxCharacter: 255,
+                            ),
+                            actions: [
+                              TextButton(
+                                  onPressed: () async {
+                                    await _endSuccessProcess(false);
+                                    setState(() {
+                                      _updateIterProcess(
+                                          'final_note', controller.text);
+                                    });
+                                    if (context.mounted) {
+                                      Navigator.pop(context);
+                                    }
+                                  },
+                                  child: Text('Conferma')),
+                              TextButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: Text('Annulla'))
+                            ],
+                          );
+                        },
+                      );
                     },
                     child: const Text(
                       'TERMINA',
@@ -127,10 +177,43 @@ class _AdminPanelState extends State<AdminPanel> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: LogoColor.greenLogoColor,
                     ),
-                    onPressed: () {
-                      setState(() {
-                        _endSuccessProcess(true);
-                      });
+                    onPressed: () async {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          TextEditingController controller =
+                              TextEditingController();
+                          return AlertDialog(
+                            content: CustomTextInput(
+                              label: 'Giudizio finale',
+                              readOnly: false,
+                              controller: controller,
+                              textCapitalization: true,
+                              kType: TextInputType.text,
+                              maxCharacter: 255,
+                            ),
+                            actions: [
+                              TextButton(
+                                  onPressed: () async {
+                                    await _endSuccessProcess(true);
+                                    setState(() {
+                                      _updateIterProcess(
+                                          'final_note', controller.text);
+                                    });
+                                    if (context.mounted) {
+                                      Navigator.pop(context);
+                                    }
+                                  },
+                                  child: Text('Conferma')),
+                              TextButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: Text('Annulla'))
+                            ],
+                          );
+                        },
+                      );
                     },
                     child: const Text(
                       'SUCCESSO',
@@ -143,13 +226,13 @@ class _AdminPanelState extends State<AdminPanel> {
           ),
         );
       case 'success':
-        return Center(
-          child: Text('successo'),
+        return FailedOrSuccessScreen(
+          id: widget._id.toString(),
         );
+
       case 'failed':
-        return Center(
-          child: Text('fallito'),
-        );
+        return FailedOrSuccessScreen(id: widget._id.toString());
+
       default:
         return Text('Error');
     }
@@ -179,98 +262,6 @@ class _AdminPanelState extends State<AdminPanel> {
           return snapshot.data!;
         }
       },
-    );
-  }
-}
-
-class info_interview_tab extends StatelessWidget {
-  info_interview_tab({
-    super.key,
-    required String label,
-    required String id,
-    required int stepNumber,
-  })  : _stepNumber = stepNumber,
-        _id = id,
-        _label = label;
-
-  final String _label;
-  final String _id;
-  final int _stepNumber;
-  final TextEditingController controller = TextEditingController();
-
-  Future<String> _futureDatas() async {
-    dynamic result = '';
-    try {
-      result = await MySQLServices.genericSelect('iter',
-          param: "id_candidatura='$_id'");
-    } catch (e) {
-      throw Exception("Error: $e");
-    }
-    return result.first['note_${_stepNumber}_step'];
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(10.0),
-      decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey, width: 2.0),
-          borderRadius: BorderRadius.circular(25.0)),
-      child: Column(
-        children: [
-          Text(
-            _label,
-            textAlign: TextAlign.center,
-          ),
-          FutureBuilder(
-              future: _futureDatas(),
-              builder: (context, snapshot) {
-                if (!snapshot.hasData) {
-                  return CustomTextInput(
-                      label: 'Note',
-                      readOnly: false,
-                      controller: controller,
-                      textCapitalization: true,
-                      kType: TextInputType.text,
-                      maxCharacter: 255);
-                } else {
-                  controller.text = snapshot.data!;
-                  return CustomTextInput(
-                      label: 'Note',
-                      readOnly: false,
-                      controller: controller,
-                      textCapitalization: true,
-                      kType: TextInputType.text,
-                      maxCharacter: 255);
-                }
-              }),
-          Align(
-            alignment: Alignment.bottomRight,
-            child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Theme.of(context).canvasColor,
-                ),
-                onPressed: () async {
-                  try {
-                    SystemChannels.textInput.invokeMethod('TextInput.hide');
-
-                    await MySQLServices.manageIter(
-                        "note_${_stepNumber}_step='${controller.text}'", _id);
-                    FlutterGeneralServices.showSnackBar(
-                        context, 'Modifica avvenuta con successo');
-                  } catch (e) {
-                    FlutterGeneralServices.showSnackBar(
-                        context, 'Si è verificato un problema');
-                    throw Exception("Error: $e");
-                  }
-                },
-                child: Icon(
-                  Icons.check,
-                  color: Colors.black,
-                )),
-          ),
-        ],
-      ),
     );
   }
 }

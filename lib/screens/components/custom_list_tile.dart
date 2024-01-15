@@ -16,7 +16,11 @@ class CustomListTile extends StatelessWidget {
     required dynamic Function() func,
     required String promoter,
     required String skills,
-  })  : _skills = skills,
+    required String email,
+    required String phone,
+  })  : _phone = phone,
+        _email = email,
+        _skills = skills,
         _promoter = promoter,
         _func = func,
         _date = date,
@@ -31,6 +35,8 @@ class CustomListTile extends StatelessWidget {
   final Function() _func;
   final String _promoter;
   final String _skills;
+  final String _email;
+  final String _phone;
 
   Future<Widget> _futureDatas() async {
     dynamic result = '';
@@ -129,6 +135,8 @@ class CustomListTile extends StatelessWidget {
                 name: _name,
                 lastName: _lastName,
                 skills: _skills,
+                email: _email,
+                phone: _phone,
               );
             });
       },

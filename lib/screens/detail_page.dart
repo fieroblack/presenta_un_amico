@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:presenta_un_amico/screens/components/admin_panel.dart';
+import 'package:presenta_un_amico/screens/failed_or_success_screen.dart';
 import 'package:presenta_un_amico/services/mysql-services.dart';
 import 'package:presenta_un_amico/services/user_model.dart';
 
@@ -17,7 +18,11 @@ class DetailPage extends StatelessWidget {
     required DateTime date,
     required String skills,
     required dynamic Function() func,
-  })  : _func = func,
+    required String email,
+    required String phone,
+  })  : _phone = phone,
+        _email = email,
+        _func = func,
         _skills = skills,
         _date = date,
         _lastName = lastName,
@@ -30,6 +35,8 @@ class DetailPage extends StatelessWidget {
   final DateTime _date;
   final String _skills;
   final Function() _func;
+  final String _email;
+  final String _phone;
 
   Future<List<Widget>> _recoverData() async {
     List<Widget> list = [];
@@ -121,6 +128,8 @@ class DetailPage extends StatelessWidget {
                           )
                         ],
                       ),
+                      Text(_phone, textAlign: TextAlign.center),
+                      Text(_email, textAlign: TextAlign.center),
                       Wrap(
                         alignment: WrapAlignment.center,
                         children: _skillsListWidget(),
@@ -141,7 +150,9 @@ class DetailPage extends StatelessWidget {
                           ? AdminPanel(
                               id: _id,
                             )
-                          : Container(),
+                          : FailedOrSuccessScreen(
+                              id: _id.toString(),
+                            ),
                     ],
                   ),
                 ),

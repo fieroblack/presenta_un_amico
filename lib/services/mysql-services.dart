@@ -36,10 +36,11 @@ class MySQLServices {
     try {
       var conn = await MySQLServices.connectToMySQL();
       var res = await conn.query(query);
-      await conn.close();
+
       query =
           "INSERT INTO iter (id_candidatura, status) VALUES ('${res.insertId!}', 'closed')";
       await conn.query(query);
+      await conn.close();
     } catch (e) {
       throw Exception('Error: $e');
     }
